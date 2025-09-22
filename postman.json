@@ -1,0 +1,680 @@
+{
+  "info": {
+    "name": "Approval System API",
+    "description": "Complete approval system API endpoints with authentication",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3333/api/v1"
+    },
+    {
+      "key": "auth_token",
+      "value": "your_bearer_token_here"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login to get authentication token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Approval Items",
+      "item": [
+        {
+          "name": "Get All Approval Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-items?page=1&limit=20&status=pending&content_type=organization",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "Filter by status: pending, approved, rejected"
+                },
+                {
+                  "key": "content_type",
+                  "value": "organization",
+                  "description": "Filter by content type"
+                }
+              ]
+            },
+            "description": "Get paginated list of approval items with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Approval Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content_type\": \"organization\",\n  \"content_id\": 123\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approval-items",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items"]
+            },
+            "description": "Create a new approval item"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Approval Item",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-items/{{approval_item_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items", "{{approval_item_uuid}}"]
+            },
+            "description": "Get specific approval item with content"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Approval Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\",\n  \"current_approval_level_id\": 456\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approval-items/{{approval_item_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items", "{{approval_item_uuid}}"]
+            },
+            "description": "Update approval item status or level"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Approval Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-items/{{approval_item_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items", "{{approval_item_uuid}}"]
+            },
+            "description": "Delete approval item"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Items by Content Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-items/content-type/organization?page=1&limit=20&status=pending",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items", "content-type", "organization"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            },
+            "description": "Get approval items filtered by content type"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-items/my-items?page=1&limit=20&status=pending&content_type=organization",
+              "host": ["{{base_url}}"],
+              "path": ["approval-items", "my-items"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "content_type",
+                  "value": "organization"
+                }
+              ]
+            },
+            "description": "Get approval items created by current user"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Approvals",
+      "item": [
+        {
+          "name": "Get All Approvals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approvals?page=1&limit=20&status=pending&user_id=123",
+              "host": ["{{base_url}}"],
+              "path": ["approvals"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "user_id",
+                  "value": "123"
+                }
+              ]
+            },
+            "description": "Get all approvals with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pending Approvals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approvals/pending?page=1&limit=20&content_type=organization",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "pending"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "content_type",
+                  "value": "organization"
+                }
+              ]
+            },
+            "description": "Get pending approvals for current user based on their roles"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Approvals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approvals/my-approvals?page=1&limit=20&status=approved",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "my-approvals"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "approved"
+                }
+              ]
+            },
+            "description": "Get approvals processed by current user"
+          },
+          "response": []
+        },
+        {
+          "name": "Process Approval (Approve)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\",\n  \"note\": \"Everything looks good, approved!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approvals/{{approval_uuid}}/process",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "{{approval_uuid}}", "process"]
+            },
+            "description": "Approve an approval request"
+          },
+          "response": []
+        },
+        {
+          "name": "Process Approval (Reject)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"reject\",\n  \"note\": \"Missing required documentation. Please resubmit with all required documents.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approvals/{{approval_uuid}}/process",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "{{approval_uuid}}", "process"]
+            },
+            "description": "Reject an approval request"
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Process Approvals",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approval_uuids\": [\n    \"uuid-1\",\n    \"uuid-2\",\n    \"uuid-3\"\n  ],\n  \"action\": \"approve\",\n  \"note\": \"Bulk approval - all items meet requirements\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approvals/bulk-process",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "bulk-process"]
+            },
+            "description": "Process multiple approvals at once"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Approval History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approvals/history/{{approval_item_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approvals", "history", "{{approval_item_uuid}}"]
+            },
+            "description": "Get complete approval history for an approval item"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Approval Levels",
+      "item": [
+        {
+          "name": "Get All Approval Levels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-levels?page=1&limit=50&content_type=organization",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "content_type",
+                  "value": "organization"
+                }
+              ]
+            },
+            "description": "Get all approval levels with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Approval Level",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role_id\": 1,\n  \"content_type\": \"organization\",\n  \"sequence_number\": 1,\n  \"auto_assign_next\": true,\n  \"is_final_step\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approval-levels",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels"]
+            },
+            "description": "Create a new approval level"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Approval Level",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-levels/{{approval_level_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels", "{{approval_level_uuid}}"]
+            },
+            "description": "Get specific approval level"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Approval Level",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role_id\": 2,\n  \"sequence_number\": 2,\n  \"auto_assign_next\": false,\n  \"is_final_step\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approval-levels/{{approval_level_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels", "{{approval_level_uuid}}"]
+            },
+            "description": "Update approval level"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Approval Level",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-levels/{{approval_level_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels", "{{approval_level_uuid}}"]
+            },
+            "description": "Delete approval level"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Workflow for Content Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-levels/workflow/organization",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels", "workflow", "organization"]
+            },
+            "description": "Get complete approval workflow for a content type"
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder Approval Levels",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level_uuids\": [\n    \"uuid-level-2\",\n    \"uuid-level-1\",\n    \"uuid-level-3\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/approval-levels/reorder/organization",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels", "reorder", "organization"]
+            },
+            "description": "Reorder approval levels for a content type"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Content Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-levels/content-types",
+              "host": ["{{base_url}}"],
+              "path": ["approval-levels", "content-types"]
+            },
+            "description": "Get all content types with approval level counts"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Approval Stats & Analytics",
+      "item": [
+        {
+          "name": "Get User Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-stats/user/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-stats", "user", "{{user_id}}"]
+            },
+            "description": "Get approval statistics for a specific user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Overall Metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-stats/metrics",
+              "host": ["{{base_url}}"],
+              "path": ["approval-stats", "metrics"]
+            },
+            "description": "Get overall approval system metrics for dashboard"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Approval Progress",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/approval-stats/progress/{{approval_item_uuid}}",
+              "host": ["{{base_url}}"],
+              "path": ["approval-stats", "progress", "{{approval_item_uuid}}"]
+            },
+            "description": "Get workflow progress for a specific approval item"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set variables for easy testing",
+          "if (!pm.collectionVariables.get('approval_item_uuid')) {",
+          "    pm.collectionVariables.set('approval_item_uuid', 'sample-uuid-here');",
+          "}",
+          "if (!pm.collectionVariables.get('approval_uuid')) {",
+          "    pm.collectionVariables.set('approval_uuid', 'sample-approval-uuid');",
+          "}",
+          "if (!pm.collectionVariables.get('approval_level_uuid')) {",
+          "    pm.collectionVariables.set('approval_level_uuid', 'sample-level-uuid');",
+          "}",
+          "if (!pm.collectionVariables.get('user_id')) {",
+          "    pm.collectionVariables.set('user_id', '1');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-extract UUIDs from responses for chaining requests",
+          "if (pm.response.json() && pm.response.json().data) {",
+          "    const data = pm.response.json().data;",
+          "    ",
+          "    // Extract approval item UUID",
+          "    if (data.uuid && pm.info.requestName.includes('Approval Item')) {",
+          "        pm.collectionVariables.set('approval_item_uuid', data.uuid);",
+          "    }",
+          "    ",
+          "    // Extract approval UUID",
+          "    if (data.uuid && pm.info.requestName.includes('Approval') && !pm.info.requestName.includes('Item')) {",
+          "        pm.collectionVariables.set('approval_uuid', data.uuid);",
+          "    }",
+          "    ",
+          "    // Extract approval level UUID",
+          "    if (data.uuid && pm.info.requestName.includes('Level')) {",
+          "        pm.collectionVariables.set('approval_level_uuid', data.uuid);",
+          "    }",
+          "    ",
+          "    // Extract auth token from login",
+          "    if (data.token) {",
+          "        pm.collectionVariables.set('auth_token', data.token);",
+          "    }",
+          "}",
+          "",
+          "// Basic response validation",
+          "pm.test('Status code is success', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response has success field', function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('success');",
+          "    pm.expect(jsonData.success).to.be.true;",
+          "});"
+        ]
+      }
+    }
+  ]
+}

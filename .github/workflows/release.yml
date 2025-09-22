@@ -1,0 +1,60 @@
+# .github/workflows/deploy.yml
+
+name: Deploy Api
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare deployment directory
+        run: |
+          # Backup storage folder if it exists
+          if [ -d ~/www/api-lssu.ola.om/build/storage ]; then
+            mkdir -p ~/storage-backup
+            rsync -a ~/www/api-lssu.ola.om/build/storage/ ~/storage-backup/
+          fi
+
+          # Clean up existing directory
+          rm -rf ~/www/api-lssu.ola.om
+          mkdir -p ~/www/api-lssu.ola.om
+
+          # Copy new files
+          cp -r ./* ~/www/api-lssu.ola.om
+          cp -r ~/www/config/api-lssu.ola.om/. ~/www/api-lssu.ola.om
+
+      - name: Install & Build
+        run: |
+          cd ~/www/api-lssu.ola.om
+          export PATH="$HOME/.bun/bin:$PATH"
+          export PATH="$HOME/.nvm/versions/node/v22.17.1/bin:$PATH"
+
+          bun install
+          bun run build
+          node ace migration:run --force
+
+          cd build
+          bun install --production
+          cp -r ~/www/config/api-lssu.ola.om/. ~/www/api-lssu.ola.om/build
+
+          # Copy resources directory to build folder
+          if [ -d ~/www/api-lssu.ola.om/resources ]; then
+            cp -r ~/www/api-lssu.ola.om/resources ~/www/api-lssu.ola.om/build/
+          fi
+
+          # Restore storage folder if backup exists
+          if [ -d ~/storage-backup ]; then
+            mkdir -p ~/www/api-lssu.ola.om/build/storage
+            rsync -a --ignore-existing ~/storage-backup/ ~/www/api-lssu.ola.om/build/storage/
+          fi
+
+          pm2 restart ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production

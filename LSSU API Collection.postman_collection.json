@@ -1,0 +1,3523 @@
+{
+	"info": {
+		"_postman_id": "7ff8b37b-c9e8-498a-8a63-3d643c954dca",
+		"name": "LSSU API Collection",
+		"description": "API collection for LSSU application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46718293",
+		"_collection_link": "https://btilogicx.postman.co/workspace/Team-Workspace~db3b3ffe-5972-4b3d-82eb-488c49120d9c/collection/46718293-7ff8b37b-c9e8-498a-8a63-3d643c954dca?action=share&source=collection_link&creator=46718293"
+	},
+	"item": [
+		{
+			"name": "Roles and Permissions",
+			"item": [
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "List Roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/roles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"roles"
+									]
+								},
+								"description": "Get a list of all roles"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Role",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/roles/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"roles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "role-id"
+										}
+									]
+								},
+								"description": "Get a specific role by ID"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Role",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Editor\",\n  \"slug\": \"editor\",\n  \"description\": \"Can edit content but not delete\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/roles",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"roles"
+									]
+								},
+								"description": "Create a new role"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Role",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Content Editor\",\n  \"description\": \"Can edit all content but not delete\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/roles/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"roles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "role-id"
+										}
+									]
+								},
+								"description": "Update a specific role"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Role",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/roles/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"roles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "role-id"
+										}
+									]
+								},
+								"description": "Delete a specific role"
+							},
+							"response": []
+						}
+					],
+					"description": "Role management endpoints"
+				},
+				{
+					"name": "Permissions",
+					"item": [
+						{
+							"name": "List Permissions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/permissions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"permissions"
+									]
+								},
+								"description": "Get a list of all permissions"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Permission",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/permissions/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"permissions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "permission-id"
+										}
+									]
+								},
+								"description": "Get a specific permission by ID"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Permission",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Edit Posts\",\n  \"slug\": \"edit-posts\",\n  \"description\": \"Can edit posts\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/permissions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"permissions"
+									]
+								},
+								"description": "Create a new permission"
+							},
+							"response": []
+						},
+						{
+							"name": "Update Permission",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Edit All Posts\",\n  \"description\": \"Can edit all posts in the system\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/permissions/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"permissions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "permission-id"
+										}
+									]
+								},
+								"description": "Update a specific permission"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Permission",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/permissions/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"permissions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "permission-id"
+										}
+									]
+								},
+								"description": "Delete a specific permission"
+							},
+							"response": []
+						}
+					],
+					"description": "Permission management endpoints"
+				},
+				{
+					"name": "User Roles and Permissions",
+					"item": [
+						{
+							"name": "Get User Roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/users/roles/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"roles",
+										"1"
+									]
+								},
+								"description": "Get all roles assigned to a user"
+							},
+							"response": []
+						},
+						{
+							"name": "Assign Role to User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userId\": \"1\",\n  \"roleId\": \"1\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/assign-role",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"assign-role"
+									]
+								},
+								"description": "Assign a role to a user"
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Role from User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userId\": \"1\",\n  \"roleId\": \"2\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/remove-role",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"remove-role"
+									]
+								},
+								"description": "Remove a role from a user"
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Permissions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/users/permissions/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"permissions",
+										"1"
+									]
+								},
+								"description": "Get all permissions assigned to a user"
+							},
+							"response": []
+						},
+						{
+							"name": "Assign Permission to User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userId\": \"1\",\n  \"permissionId\": \"3\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/assign-permission",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"assign-permission"
+									]
+								},
+								"description": "Assign a permission to a user"
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Permission from User",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userId\": \"1\",\n  \"permissionId\": \"3\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/remove-permission",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"remove-permission"
+									]
+								},
+								"description": "Remove a permission from a user"
+							},
+							"response": []
+						},
+						{
+							"name": "Check User Permission",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userId\": \"1\",\n  \"permission\": \"edit-posts\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/check-permission",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"check-permission"
+									]
+								},
+								"description": "Check if a user has a specific permission"
+							},
+							"response": []
+						},
+						{
+							"name": "Check User Role",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"userId\": \"1\",\n  \"role\": \"editor\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/users/check-role",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"check-role"
+									]
+								},
+								"description": "Check if a user has a specific role"
+							},
+							"response": []
+						}
+					],
+					"description": "User role and permission management endpoints"
+				}
+			],
+			"description": "Role and permission management endpoints"
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('token', response.access_token);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login with email and password to get access token"
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"New User\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/signup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Create a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Reset Password OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/send-reset-password-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"send-reset-password-otp"
+							]
+						},
+						"description": "Send a one-time password to reset user password"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Reset Password OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/verify-reset-password-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-reset-password-otp"
+							]
+						},
+						"description": "Verify the OTP sent for password reset"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"123456\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/reset-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"reset-password"
+							]
+						},
+						"description": "Reset user password with OTP verification"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Logout the current user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Authenticated User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/authenticated",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"authenticated"
+							]
+						},
+						"description": "Get the currently authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Resend OTP",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/resend-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"resend-otp"
+							]
+						},
+						"description": "Resend verification OTP to user's email"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/verify-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-otp"
+							]
+						},
+						"description": "Verify user's email with OTP"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication related endpoints"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users?page=1&page_size=10&sort_column=created_at&sort_order=desc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "sort_column",
+									"value": "created_at"
+								},
+								{
+									"key": "sort_order",
+									"value": "desc"
+								}
+							]
+						},
+						"description": "Get a paginated list of users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/c2bcd630-84fd-40e2-bb0f-c8f4165ced45",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"c2bcd630-84fd-40e2-bb0f-c8f4165ced45"
+							]
+						},
+						"description": "Get a specific user by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Updated Name\",\n  \"email\": \"updated@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "user-uuid"
+								}
+							]
+						},
+						"description": "Update a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "user-uuid"
+								}
+							]
+						},
+						"description": "Delete a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload User Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/kamranallahyar/Downloads/thumbnail_image013.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/image",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"image"
+							]
+						},
+						"description": "Upload a profile image for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Self Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"civil_number\": \"3640218870057\",\n    \"passport_number\":\"3640218870057\",\n    \"rob_license_number\":\"3640218870057\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Update the authenticated user's profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"current_password\": \"currentpassword\",\n  \"password\": \"newpassword123\",\n  \"password_confirmation\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/change-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"change-password"
+							]
+						},
+						"description": "Change the authenticated user's password"
+					},
+					"response": []
+				}
+			],
+			"description": "User management endpoints"
+		},
+		{
+			"name": "Organization Members",
+			"item": [
+				{
+					"name": "List Organization Members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/organization/members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"organization",
+								"members"
+							]
+						},
+						"description": "Get all members of the organization. Requires an active organization profile."
+					},
+					"response": []
+				},
+				{
+					"name": "Add Member to Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"member_profile_id\": 123,\n  \"role\": \"member\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organization/members",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"organization",
+								"members"
+							]
+						},
+						"description": "Add a profile to the organization. Requires an active organization profile."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organization/members/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"organization",
+								"members",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "member-uuid",
+									"description": "UUID of the organization member"
+								}
+							]
+						},
+						"description": "Update a member's role in the organization. Requires an active organization profile."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Member from Organization",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/organization/members/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"organization",
+								"members",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "member-uuid",
+									"description": "UUID of the organization member"
+								}
+							]
+						},
+						"description": "Remove a profile from the organization. Requires an active organization profile."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "List Profiles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						},
+						"description": "Get all profiles for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Organization Profile\",\n  \"role\": \"organization\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles"
+							]
+						},
+						"description": "Create a new profile for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Active Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/active",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"active"
+							]
+						},
+						"description": "Get the currently active profile for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/79dd25a4-6b7e-42b9-b338-9f7b60414031",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"79dd25a4-6b7e-42b9-b338-9f7b60414031"
+							]
+						},
+						"description": "Get a specific profile by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Staff Name\",\n  \"role\": \"staff\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/2742a218-714b-4cbc-9cf5-c36d38b96557",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"2742a218-714b-4cbc-9cf5-c36d38b96557"
+							]
+						},
+						"description": "Update a specific profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Profile",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/f525f189-4be4-4423-9919-564965a0f124",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"f525f189-4be4-4423-9919-564965a0f124"
+							]
+						},
+						"description": "Delete a specific profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Switch Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/79dd25a4-6b7e-42b9-b338-9f7b60414031/switch",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"79dd25a4-6b7e-42b9-b338-9f7b60414031",
+								"switch"
+							]
+						},
+						"description": "Switch to a specific profile"
+					},
+					"response": []
+				}
+			],
+			"description": "Profile management endpoints"
+		},
+		{
+			"name": "Profile Fields",
+			"item": [
+				{
+					"name": "List Profile Fields",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/:profileId/fields",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								":profileId",
+								"fields"
+							],
+							"variable": [
+								{
+									"key": "profileId",
+									"value": "profile-uuid"
+								}
+							]
+						},
+						"description": "Get all fields for a specific profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Profile Field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"key\": \"is_graduated\",\n  \"value\": false,\n  \"type\": \"boolean\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/79dd25a4-6b7e-42b9-b338-9f7b60414031/fields",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"79dd25a4-6b7e-42b9-b338-9f7b60414031",
+								"fields"
+							]
+						},
+						"description": "Create a new field for a specific profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create Profile Fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fields\": [\n        {\n            \"field_name\": \"is_graduated\",\n            \"field_value\": \"false\",\n            \"field_type\": \"boolean\",\n            \"is_required\": true\n        },\n        {\n            \"field_name\": \"is_graduated\",\n            \"field_value\": \"false\",\n            \"field_type\": \"boolean\",\n            \"is_required\": true\n        },\n        {\n            \"field_name\": \"is_graduated\",\n            \"field_value\": \"false\",\n            \"field_type\": \"boolean\",\n            \"is_required\": true\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/79dd25a4-6b7e-42b9-b338-9f7b60414031/fields/bulk",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"79dd25a4-6b7e-42b9-b338-9f7b60414031",
+								"fields",
+								"bulk"
+							]
+						},
+						"description": "Create multiple fields for a specific profile in a single request"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile Field",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/79dd25a4-6b7e-42b9-b338-9f7b60414031/fields/6203f316-f9a8-4443-bdd9-887d39f25ba9",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"79dd25a4-6b7e-42b9-b338-9f7b60414031",
+								"fields",
+								"6203f316-f9a8-4443-bdd9-887d39f25ba9"
+							]
+						},
+						"description": "Get a specific field by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile Field",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"key\": \"job_title\",\n  \"value\": \"Senior Software Engineer\",\n  \"type\": \"text\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/:profileId/fields/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								":profileId",
+								"fields",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "profileId",
+									"value": "profile-uuid"
+								},
+								{
+									"key": "id",
+									"value": "field-uuid"
+								}
+							]
+						},
+						"description": "Update a specific field"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Profile Field",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/:profileId/fields/6203f316-f9a8-4443-bdd9-887d39f25ba9",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								":profileId",
+								"fields",
+								"6203f316-f9a8-4443-bdd9-887d39f25ba9"
+							],
+							"variable": [
+								{
+									"key": "profileId",
+									"value": "profile-uuid"
+								}
+							]
+						},
+						"description": "Delete a specific field"
+					},
+					"response": []
+				}
+			],
+			"description": "Profile fields management endpoints"
+		},
+		{
+			"name": "Announcement",
+			"item": [
+				{
+					"name": "Documents",
+					"item": [
+						{
+							"name": "Create Announcement Document",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Company Registration Certificate",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "This is a dummy description for the Company Registration Certificate.",
+											"type": "text"
+										},
+										{
+											"key": "is_required",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "allowed_type",
+											"value": "pdf",
+											"type": "text"
+										},
+										{
+											"key": "max_size",
+											"value": "2000",
+											"type": "text"
+										},
+										{
+											"key": "announcement_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/announcements/a7e51cad-d4a1-4737-abd9-41b3bb4dcc55/documents",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"announcements",
+										"a7e51cad-d4a1-4737-abd9-41b3bb4dcc55",
+										"documents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Announcement Required Document",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/announcements/b26d3a40-d596-4b7d-9207-2969da881f0e/documents",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"announcements",
+										"b26d3a40-d596-4b7d-9207-2969da881f0e",
+										"documents"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Announcement Required Document",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"Test announcement 2\",\r\n    \"description\": \"This is a dummy description for this test announcement 2.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/announcements/b26d3a40-d596-4b7d-9207-2969da881f0e/documents/3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"announcements",
+										"b26d3a40-d596-4b7d-9207-2969da881f0e",
+										"documents",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Announcement Required Document",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/announcements/7a645a59-2365-4b8e-9e9d-ae59a15cb855/documents/3",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"announcements",
+										"7a645a59-2365-4b8e-9e9d-ae59a15cb855",
+										"documents",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Announcement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Test announcement 2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is a dummy description for this test announcement 2.",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "draft",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "vat",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "start_date",
+									"value": "2025-07-15",
+									"type": "text"
+								},
+								{
+									"key": "deadline",
+									"value": "2025-08-02",
+									"type": "text"
+								},
+								{
+									"key": "arabic_name",
+									"value": "إعلان الاختبار2",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/kamranallahyar/Downloads/thumbnail_image013.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/announcements",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"announcements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Announcements",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/announcements",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"announcements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Announcement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/announcements/b26d3a40-d596-4b7d-9207-2969da881f0e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"announcements",
+								"b26d3a40-d596-4b7d-9207-2969da881f0e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Announcement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Test announcement 2\",\r\n    \"description\": \"This is a dummy description for this test announcement 2.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/announcements/44126306-9e11-4a40-9940-9791fe730ad7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"announcements",
+								"44126306-9e11-4a40-9940-9791fe730ad7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Announcement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/announcements/44126306-9e11-4a40-9940-9791fe730ad7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"announcements",
+								"44126306-9e11-4a40-9940-9791fe730ad7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Create application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "announcement_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "Pending",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "organization_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/application",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/application",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/application/3f193511-3897-408f-a3ee-92169b7d5bac",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"3f193511-3897-408f-a3ee-92169b7d5bac"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "payment_proof_file",
+									"type": "file",
+									"src": "/C:/Users/Bitlogicx/OneDrive - Bitlogicx/Pictures/sample-images-main/images/image-18.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/application/3f193511-3897-408f-a3ee-92169b7d5bac",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"3f193511-3897-408f-a3ee-92169b7d5bac"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete application",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/application/3f193511-3897-408f-a3ee-92169b7d5bac",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"3f193511-3897-408f-a3ee-92169b7d5bac"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Payment Proof",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "payment_proof_file",
+									"type": "file",
+									"src": "/C:/Users/Bitlogicx/OneDrive - Bitlogicx/Pictures/sample-images-main/images/image-8.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/application/3f193511-3897-408f-a3ee-92169b7d5bac/payment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"3f193511-3897-408f-a3ee-92169b7d5bac",
+								"payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Audit Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "audit_document",
+									"type": "file",
+									"src": "/C:/Users/Bitlogicx/Downloads/5649MD  Report.xlsx"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/application/3f193511-3897-408f-a3ee-92169b7d5bac/audit",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"application",
+								"3f193511-3897-408f-a3ee-92169b7d5bac",
+								"audit"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Application Document",
+			"item": [
+				{
+					"name": "List Application Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/applicationDocument",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"applicationDocument"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Application Document",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "application_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "announcement_document_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "file_path",
+									"type": "file",
+									"src": "/C:/Users/Bitlogicx/Downloads/TATI Certificate.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/applicationDocument/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"applicationDocument",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get application documents",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/applicationDocument/3f193511-3897-408f-a3ee-92169b7d5bac",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"applicationDocument",
+								"3f193511-3897-408f-a3ee-92169b7d5bac"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "List Countries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/countries?page=1&page_size=10&sort_column=name&sort_order=asc&is_active=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "sort_column",
+									"value": "name"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc"
+								},
+								{
+									"key": "is_active",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Get a paginated list of countries"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "country-uuid"
+								}
+							]
+						},
+						"description": "Get a specific country by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Country",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Oman\",\n  \"code\": \"OM\",\n  \"dialing_code\": \"+968\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/countries",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"countries"
+							]
+						},
+						"description": "Create a new country"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Country",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Oman\",\n  \"code\": \"OM\",\n  \"dialing_code\": \"+968\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "country-uuid"
+								}
+							]
+						},
+						"description": "Update a specific country"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Country",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/countries/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "country-uuid"
+								}
+							]
+						},
+						"description": "Delete a specific country"
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Country Flag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "flag",
+									"type": "file",
+									"src": "/path/to/flag.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/countries/:id/flag",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"countries",
+								":id",
+								"flag"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "country-uuid"
+								}
+							]
+						},
+						"description": "Upload a flag image for a specific country"
+					},
+					"response": []
+				}
+			],
+			"description": "Country management endpoints"
+		},
+		{
+			"name": "States",
+			"item": [
+				{
+					"name": "List States",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/states?page=1&page_size=10&sort_column=name&sort_order=asc&is_active=true&country_id=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"states"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "sort_column",
+									"value": "name"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc"
+								},
+								{
+									"key": "is_active",
+									"value": "true"
+								},
+								{
+									"key": "country_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get a paginated list of states"
+					},
+					"response": []
+				},
+				{
+					"name": "Get State",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/states/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"states",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "state-uuid"
+								}
+							]
+						},
+						"description": "Get a specific state by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create State",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Muscat\",\n  \"code\": \"MST\",\n  \"country_id\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/states",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"states"
+							]
+						},
+						"description": "Create a new state"
+					},
+					"response": []
+				},
+				{
+					"name": "Update State",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Muscat\",\n  \"code\": \"MST\",\n  \"country_id\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/states/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"states",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "state-uuid"
+								}
+							]
+						},
+						"description": "Update a specific state"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete State",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/states/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"states",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "state-uuid"
+								}
+							]
+						},
+						"description": "Delete a specific state"
+					},
+					"response": []
+				}
+			],
+			"description": "State management endpoints"
+		},
+		{
+			"name": "Cities",
+			"item": [
+				{
+					"name": "List Cities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cities?page=1&page_size=10&sort_column=name&sort_order=asc&is_active=true&state_id=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cities"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "sort_column",
+									"value": "name"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc"
+								},
+								{
+									"key": "is_active",
+									"value": "true"
+								},
+								{
+									"key": "state_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Get a paginated list of cities"
+					},
+					"response": []
+				},
+				{
+					"name": "Get City",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "city-uuid"
+								}
+							]
+						},
+						"description": "Get a specific city by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Create City",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Seeb\",\n  \"code\": \"SB\",\n  \"state_id\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cities"
+							]
+						},
+						"description": "Create a new city"
+					},
+					"response": []
+				},
+				{
+					"name": "Update City",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Seeb\",\n  \"code\": \"SB\",\n  \"state_id\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "city-uuid"
+								}
+							]
+						},
+						"description": "Update a specific city"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete City",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cities/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cities",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "city-uuid"
+								}
+							]
+						},
+						"description": "Delete a specific city"
+					},
+					"response": []
+				}
+			],
+			"description": "City management endpoints"
+		},
+		{
+			"name": "Settings",
+			"item": [
+				{
+					"name": "List Settings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/settings?page=1&page_size=10&sort_column=key&sort_order=asc&is_active=true&key=bank&type=json",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								},
+								{
+									"key": "sort_column",
+									"value": "key"
+								},
+								{
+									"key": "sort_order",
+									"value": "asc"
+								},
+								{
+									"key": "is_active",
+									"value": "true"
+								},
+								{
+									"key": "key",
+									"value": "bank"
+								},
+								{
+									"key": "type",
+									"value": "json"
+								}
+							]
+						},
+						"description": "Get a paginated list of settings"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Setting",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "setting-uuid"
+								}
+							]
+						},
+						"description": "Get a specific setting by UUID"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Setting By Key",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/key/:key",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								"key",
+								":key"
+							],
+							"variable": [
+								{
+									"key": "key",
+									"value": "bank_details"
+								}
+							]
+						},
+						"description": "Get a specific setting by key"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Setting",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"key\": \"bank_details\",\n  \"name\": \"Bank Details\",\n  \"value\": \"{\\\"bank_name\\\":\\\"Bank Muscat\\\",\\\"account_number\\\":\\\"1234567890\\\",\\\"branch\\\":\\\"Seeb\\\"}\",\n  \"type\": \"json\",\n  \"description\": \"Bank details for payments\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/settings",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings"
+							]
+						},
+						"description": "Create a new setting"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Setting",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"key\": \"bank_details\",\n  \"name\": \"Bank Details\",\n  \"value\": \"{\\\"bank_name\\\":\\\"Bank Muscat\\\",\\\"account_number\\\":\\\"1234567890\\\",\\\"branch\\\":\\\"Seeb\\\"}\",\n  \"type\": \"json\",\n  \"description\": \"Bank details for payments\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "setting-uuid"
+								}
+							]
+						},
+						"description": "Update a specific setting"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Setting",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/settings/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"settings",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "setting-uuid"
+								}
+							]
+						},
+						"description": "Delete a specific setting"
+					},
+					"response": []
+				}
+			],
+			"description": "Setting management endpoints"
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Heavy Vehicle 1\",\r\n    \"image\": \"uploads/categories/vehicle.jpg\",\r\n    \"meta_title\": \"Heavy Vehicle Training in Oman\",\r\n    \"meta_description\": \"Training programs for heavy vehicle drivers in Oman, covering rigged, articulated, waste, and fuel tanker operations with a focus on safety and compliance.\",\r\n    \"meta_keywords\": \"heavy vehicle training, Oman truck driver, defensive driving, hazardous goods, waste truck, fuel tanker\",\r\n    \"og_image\": \"uploads/categories/og_electronics.jpg\",\r\n    \"description\": \"Training programs for heavy vehicle drivers in Oman, covering rigged, articulated, waste, and fuel tanker operations with a focus on safety and compliance.\",\r\n    \"status\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Sub Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Dummy Sub Category\",\r\n    \"image\": \"uploads/categories/vehicle.jpg\",\r\n    \"meta_title\": \"Dummy Sub Category for testing\",\r\n    \"meta_description\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque.\",\r\n    \"meta_keywords\": \"heavy vehicle training, Oman truck driver, defensive driving, hazardous goods, waste truck, fuel tanker\",\r\n    \"og_image\": \"uploads/categories/og_electronics.jpg\",\r\n    \"description\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sit amet consectetur adipiscing elit quisque faucibus ex. Adipiscing elit quisque faucibus ex sapien vitae pellentesque.\",\r\n    \"status\": true,\r\n    \"parent_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/6c477ecd-64b0-4050-8ed5-81aec9ac2108",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"6c477ecd-64b0-4050-8ed5-81aec9ac2108"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/be67128b-49f9-4594-923b-914d4b8a5ace",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"be67128b-49f9-4594-923b-914d4b8a5ace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/6c477ecd-64b0-4050-8ed5-81aec9ac2108",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"6c477ecd-64b0-4050-8ed5-81aec9ac2108"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Categories tree",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/categories/tree",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"tree"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3333",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "your-access-token",
+			"type": "string"
+		}
+	]
+}

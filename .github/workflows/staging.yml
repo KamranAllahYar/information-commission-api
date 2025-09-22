@@ -1,0 +1,60 @@
+# .github/workflows/deploy.yml
+
+name: Deploy Api (Staging)
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    name: Deploy (Staging)
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare deployment directory
+        run: |
+          # Backup storage folder if it exists
+          if [ -d ~/www/staging-api-lssu.ola.om/build/storage ]; then
+            mkdir -p ~/storage-backup-staging
+            rsync -a ~/www/staging-api-lssu.ola.om/build/storage/ ~/storage-backup-staging/
+          fi
+
+          # Clean up existing directory
+          rm -rf ~/www/staging-api-lssu.ola.om
+          mkdir -p ~/www/staging-api-lssu.ola.om
+
+          # Copy new files
+          cp -r ./* ~/www/staging-api-lssu.ola.om
+          cp -r ~/www/config/staging-api-lssu.ola.om/. ~/www/staging-api-lssu.ola.om
+
+      - name: Install & Build
+        run: |
+          cd ~/www/staging-api-lssu.ola.om
+          export PATH="$HOME/.bun/bin:$PATH"
+          export PATH="$HOME/.nvm/versions/node/v22.17.1/bin:$PATH"
+
+          bun install
+          bun run build
+          node ace migration:run --force
+
+          cd build
+          bun install --production
+          cp -r ~/www/config/staging-api-lssu.ola.om/. ~/www/staging-api-lssu.ola.om/build
+
+          # Copy resources directory to build folder
+          if [ -d ~/www/staging-api-lssu.ola.om/resources ]; then
+            cp -r ~/www/staging-api-lssu.ola.om/resources ~/www/staging-api-lssu.ola.om/build/
+          fi
+
+          # Restore storage folder if backup exists
+          if [ -d ~/storage-backup-staging ]; then
+            mkdir -p ~/www/staging-api-lssu.ola.om/build/storage
+            rsync -a --ignore-existing ~/storage-backup-staging/ ~/www/staging-api-lssu.ola.om/build/storage/
+          fi
+
+          pm2 restart ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production
