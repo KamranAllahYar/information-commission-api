@@ -22,6 +22,7 @@ export const signupValidator = vine.compile(
       phone: vine.string().trim().optional(),
       password: vine.string().trim().minLength(8),
       gender: vine.enum(['Male', 'Female']),
+      is_admin: vine.boolean().optional(),
       address: vine.string().trim().optional(),
       postal_code: vine.string().trim().optional(),
     }),

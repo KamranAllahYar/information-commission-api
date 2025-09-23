@@ -15,6 +15,7 @@ import '#start/api/setting'
 import '#start/api/permission'
 import '#start/api/contact_message'
 import '#start/api/notification'
+import '#start/api/admins'
 
 router.get('/', async () => {
   return {

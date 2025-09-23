@@ -39,7 +39,7 @@ export default class AuthController {
 
   async login({ request, response }: HttpContext) {
     const payload = await request.validateUsing(loginValidator)
-
+    console.log('Running login')
     // Find the user
     const user = await User.query().where('email', payload.user_id.toLowerCase()).first()
 
@@ -47,6 +47,13 @@ export default class AuthController {
       return response.notFound({
         message:
           'The user with the provided details does not exist in the system. Please ensure you have entered the correct information and try again.',
+      })
+    }
+
+    // Allow ONLY admins to login via this endpoint
+    if (!user.is_admin) {
+      return response.forbidden({
+        message: 'You do not have access to the admin portal.',
       })
     }
 
@@ -143,6 +150,7 @@ export default class AuthController {
       ...payload.user,
       otp,
       otp_expiry: DateTime.now().plus({ minute: 10 }),
+      is_admin: payload.user.is_admin ?? false,
     })
     await user.save()
 
@@ -356,18 +364,20 @@ export default class AuthController {
       return response.send({
         message: 'CR number is available',
       })
-    } else if (request.input('type') === 'passport_number') {
-      const passportNumber = request.input('value')
-      const user = await User.findBy('passport_number', passportNumber)
-      if (user) {
-        return response.conflict({
-          message: 'This passport number is already in use',
-        })
-      }
-      return response.send({
-        message: 'Passport number is available',
-      })
-    } else if (request.input('type') === 'civil_number') {
+    }
+    // else if (request.input('type') === 'passport_number') {
+    //   const passportNumber = request.input('value')
+    //   const user = await User.findBy('passport_number', passportNumber)
+    //   if (user) {
+    //     return response.conflict({
+    //       message: 'This passport number is already in use',
+    //     })
+    //   }
+    //   return response.send({
+    //     message: 'Passport number is available',
+    //   })
+    // }
+    else if (request.input('type') === 'civil_number') {
       const civilNumber = request.input('value')
       const user = await User.findBy('civil_number', civilNumber)
       if (user) {

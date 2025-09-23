@@ -9,7 +9,7 @@ export const createUserValidator = vine.compile(
       dialing_code: vine.string().trim().optional(),
       phone: vine.string().optional(),
       date_of_birth: vine.string().optional(),
-      gender: vine.enum(['Male', 'Female']),
+      gender: vine.enum(['Male', 'Female']).optional().nullable(),
       civil_number: vine.string().optional(),
       passport_number: vine.string().optional(),
       rob_license_number: vine.string().optional(),

@@ -29,7 +29,7 @@ export default class UsersController {
         'full_name',
         'phone',
         'civil_number',
-        'passport_number',
+        // 'passport_number',
         'image_url',
         'verified_at',
       ])
@@ -40,7 +40,7 @@ export default class UsersController {
             .where('email', 'LIKE', `%${search}%`)
             .orWhere('civil_number', 'LIKE', `%${search}%`)
             .orWhere('phone', 'LIKE', `%${search}%`)
-            .orWhere('passport_number', 'LIKE', `%${search}%`)
+            // .orWhere('passport_number', 'LIKE', `%${search}%`)
             .orWhere('address', 'LIKE', `%${search}%`)
             .orWhereHas('user_roles', (roleQuery: any) => {
               roleQuery.where('title', 'LIKE', `%${search}%`)
@@ -84,15 +84,15 @@ export default class UsersController {
       })
     }
 
-    if (payload.user.passport_number) {
-      existingUser = await User.findBy('passport_number', payload.user.passport_number)
-      if (existingUser) {
-        return response.conflict({
-          error_code: HttpStatusMessages.ALREADY_EXISTS,
-          message: 'This passport number is already in use',
-        })
-      }
-    }
+    // if (payload.user.passport_number) {
+    //   existingUser = await User.findBy('passport_number', payload.user.passport_number)
+    //   if (existingUser) {
+    //     return response.conflict({
+    //       error_code: HttpStatusMessages.ALREADY_EXISTS,
+    //       message: 'This passport number is already in use',
+    //     })
+    //   }
+    // }
 
     if (payload.user.civil_number) {
       existingUser = await User.findBy('civil_number', payload.user.civil_number)
@@ -304,11 +304,11 @@ export default class UsersController {
   async existingUsers({ request }: HttpContext) {
     const search = request.input('search')
     const query = User.query()
-      .select(['id', 'uuid', 'email', 'full_name', 'civil_number', 'passport_number'])
+      .select(['id', 'uuid', 'email', 'full_name', 'civil_number'])
       .if(search, (q) => {
         q.where('email', search)
         q.orWhere('civil_number', search)
-        q.orWhere('passport_number', search)
+        // q.orWhere('passport_number', search)
       })
 
     if (request.input('sort_column') && request.input('sort_order')) {
@@ -316,4 +316,10 @@ export default class UsersController {
     }
     return query.paginate(request.input('page', 1), request.input('page_size', 10))
   }
+
+
+
 }
+
+
+
