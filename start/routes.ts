@@ -17,6 +17,7 @@ import '#start/api/contact_message'
 import '#start/api/notification'
 import '#start/api/admins'
 import '#start/api/commissioner'
+import '#start/api/complaints'
 
 router.get('/', async () => {
   return {
