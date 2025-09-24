@@ -1,8 +1,6 @@
 import { DateTime } from 'luxon'
-import {
-  BaseModel,
-  column,
-} from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+import { getMediaUrl } from '#lib/helpers'
 
 export default class Commissioner extends BaseModel {
   @column({ isPrimary: true })
@@ -23,6 +21,15 @@ export default class Commissioner extends BaseModel {
   @column()
   declare biography: string | null
 
+  @column()
+  declare qualifications: string | null
+
+  @column()
+  declare experience: string | null
+
+  @column()
+  declare profile_photo_url: string | null
+
   @column.date()
   declare appointment_date: DateTime
 
@@ -37,4 +44,9 @@ export default class Commissioner extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updated_at: DateTime
+
+  @computed()
+  get profile_photo_web_url() {
+    return getMediaUrl(this.profile_photo_url)
+  }
 }
