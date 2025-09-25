@@ -5,8 +5,6 @@ import { createComplaintValidator, updateComplaintValidator } from '#validators/
 export default class ComplaintsController {
   // Get all complaints
   async index({ request }: HttpContext) {
-    const page = request.input('page', 1)
-    const pageSize = request.input('page_size', 10)
     const search = request.input('search')
 
     const query = Complaint.query()
@@ -35,7 +33,7 @@ export default class ComplaintsController {
         })
       })
 
-    return query.paginate(page, pageSize)
+    return query // returns all complaints (array)
   }
 
   // Create complaint (user side)
