@@ -17,17 +17,17 @@ export default class Complaints extends BaseSchema {
         ])
         .notNullable()
 
-      table.string('public_body').notNullable()
       table.date('date_of_incident').notNullable()
       table.text('description').notNullable()
-      table.text('previous_attempts').nullable()
 
       // Contact Information
-      table.string('first_name').notNullable()
-      table.string('last_name').notNullable()
+      table.string('full_name').notNullable()
+      table.string('remedy_sought').nullable()
       table.string('email').notNullable()
       table.string('phone').nullable()
-      table.text('supporting_evidence').nullable() // could also use JSON if multiple
+      table.text('address').nullable()
+      table.string('national_id').nullable()
+      table.string('passport_number').nullable()
 
       // Admin Controlled Fields
       table.enum('priority', ['High', 'Medium', 'Low']).defaultTo('Low')

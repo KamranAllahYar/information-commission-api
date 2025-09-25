@@ -58,14 +58,6 @@ export default class User
     return parts.slice(1).join(' ') || ''
   }
 
-  @column()
-  declare address: string | null
-
-  @column()
-  declare phone: string | null
-
-  @column()
-  declare organization_name: string | null
 
   @column()
   declare gender: 'male' | 'female' | null
@@ -73,11 +65,6 @@ export default class User
   @column()
   declare date_of_birth: DateTime | null
 
-  @column()
-  declare civil_number: string | null
-
-  @column()
-  declare postal_code: string | null
 
   @column()
   declare role: 'super_admin' | 'admin' | 'editor' | 'viewer'
@@ -97,14 +84,6 @@ export default class User
   @computed()
   get image() {
     return getMediaUrl(this.image_url)
-  }
-
-  @column()
-  declare id_card_document_url: string | null
-
-  @computed()
-  get id_card_document() {
-    return getMediaUrl(this.id_card_document_url)
   }
 
   @column()

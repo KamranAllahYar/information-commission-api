@@ -10,15 +10,8 @@ export default class Users extends BaseSchema {
 
       table.string('full_name').nullable().index()
       table.string('email', 254).notNullable().unique().index()
-      table.string('dialing_code', 10).nullable().index()
-      table.string('phone', 254).nullable().index()
-      table.string('civil_number').nullable().index()
-      // table.string('passport_number').nullable().index()
 
       table.string('password').notNullable()
-      table.string('organization_name').nullable()
-      table.string('postal_code').nullable()
-      table.text('address').nullable()
 
       table.boolean('is_admin').defaultTo(false).index()
 
@@ -26,7 +19,6 @@ export default class Users extends BaseSchema {
       table.date('date_of_birth').nullable()
 
       table.text('image_url').nullable()
-      table.text('id_card_document_url').nullable()
 
       table.string('otp').nullable()
       table.timestamp('otp_expiry', { useTz: true }).nullable()
@@ -36,11 +28,8 @@ export default class Users extends BaseSchema {
 
       table.boolean('is_active').defaultTo(true).index()
 
-      // 🔹 Role & Status
       table.enum('role', ['super_admin', 'admin', 'editor', 'viewer']).defaultTo('viewer').index()
-      table.enum('status', ['active', 'inactive']).defaultTo('active').index()
 
-      // 🔹 Tracking last login
       table.timestamp('last_login_at', { useTz: true }).nullable()
 
       table.timestamp('created_at', { useTz: true })

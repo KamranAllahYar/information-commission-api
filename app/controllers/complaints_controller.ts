@@ -11,25 +11,26 @@ export default class ComplaintsController {
       .select([
         'id',
         'type',
-        'public_body',
         'date_of_incident',
         'description',
-        'previous_attempts',
-        'first_name',
-        'last_name',
+        'remedy_sought',
+        'full_name',
         'email',
         'phone',
-        'supporting_evidence',
+        'address',
+        'national_id',
+        'passport_number',
         'priority',
         'status',
         'created_at',
       ])
       .if(search, (q) => {
         q.where((qb) => {
-          qb.where('first_name', 'LIKE', `%${search}%`)
-            .orWhere('last_name', 'LIKE', `%${search}%`)
+          qb.where('full_name', 'LIKE', `%${search}%`)
             .orWhere('email', 'LIKE', `%${search}%`)
-            .orWhere('public_body', 'LIKE', `%${search}%`)
+            .orWhere('address', 'LIKE', `%${search}%`)
+            .orWhere('national_id', 'LIKE', `%${search}%`)
+            .orWhere('passport_number', 'LIKE', `%${search}%`)
         })
       })
 

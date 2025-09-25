@@ -55,7 +55,7 @@ export default class RequestsController {
 
     const payload = {
       nameOfApplicant: data.name_of_applicant,
-      age: data.age,
+      dateOfBirth: data.date_of_birth,
       address: data.address,
       telephoneNumber: data.telephone_number,
       email: data.email,
@@ -102,7 +102,7 @@ export default class RequestsController {
     const data = await request.validateUsing(updateRequestValidator)
     const payload = {
       ...(data.name_of_applicant ? { nameOfApplicant: data.name_of_applicant } : {}),
-      ...(data.age !== undefined ? { age: data.age } : {}),
+      ...(data.date_of_birth !== undefined ? { dateOfBirth: data.date_of_birth } : {}),
       ...(data.address !== undefined ? { address: data.address } : {}),
       ...(data.telephone_number ? { telephoneNumber: data.telephone_number } : {}),
       ...(data.email ? { email: data.email } : {}),

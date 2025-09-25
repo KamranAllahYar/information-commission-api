@@ -9,7 +9,7 @@ export default class Requests extends BaseSchema {
 
       // Applicant info
       table.string('name_of_applicant').notNullable()
-      table.integer('age').notNullable()
+      table.date('date_of_birth').notNullable()
       table.text('address').notNullable()
       table.string('telephone_number').notNullable()
       table.string('email').notNullable()

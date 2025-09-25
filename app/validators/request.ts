@@ -3,7 +3,7 @@ import vine from '@vinejs/vine'
 export const createRequestValidator = vine.compile(
   vine.object({
     name_of_applicant: vine.string(),
-    age: vine.number().optional(),
+    date_of_birth: vine.string().optional(),
     address: vine.string().optional(),
     telephone_number: vine.string().optional(),
     email: vine.string().email(),
@@ -31,7 +31,7 @@ export const createRequestValidator = vine.compile(
 export const updateRequestValidator = vine.compile(
   vine.object({
     name_of_applicant: vine.string().optional(),
-    age: vine.number().optional(),
+    date_of_birth: vine.string().optional(),
     address: vine.string().optional(),
     telephone_number: vine.string().optional(),
     email: vine.string().email().optional(),

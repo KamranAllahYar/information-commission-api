@@ -9,8 +9,8 @@ export default class Complaint extends BaseModel {
   @column()
   declare type: string
 
-  @column()
-  declare publicBody: string
+  // @column()
+  // declare publicBody: string
 
   @column.date()
   declare dateOfIncident: DateTime | null
@@ -18,15 +18,16 @@ export default class Complaint extends BaseModel {
   @column()
   declare description: string
 
-  @column()
-  declare previousAttempts: string | null
+  // @column()
+  // declare previousAttempts: string | null
 
   // Contact Information
   @column()
-  declare firstName: string
+  declare fullName: string
+
 
   @column()
-  declare lastName: string
+  declare remedySought: string | null
 
   @column()
   declare email: string
@@ -35,7 +36,16 @@ export default class Complaint extends BaseModel {
   declare phone: string | null
 
   @column()
-  declare supportingEvidence: string | null
+  declare address: string | null
+
+  @column()
+  declare nationalId: string | null
+
+  @column()
+  declare passportNumber: string | null
+
+  // @column()
+  // declare supportingEvidence: string | null
 
   // Admin Controlled Fields
   @column()

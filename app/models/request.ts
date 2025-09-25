@@ -10,7 +10,7 @@ export default class Request extends BaseModel {
   declare nameOfApplicant: string
 
   @column()
-  declare age: number
+  declare dateOfBirth: DateTime
 
   @column()
   declare address: string
