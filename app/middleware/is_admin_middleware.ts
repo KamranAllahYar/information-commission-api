@@ -9,5 +9,3 @@ export default class IsAdminMiddleware {
     await next()
   }
 }
-
-

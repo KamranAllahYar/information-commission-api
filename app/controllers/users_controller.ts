@@ -316,10 +316,4 @@ export default class UsersController {
     }
     return query.paginate(request.input('page', 1), request.input('page_size', 10))
   }
-
-
-
 }
-
-
-

@@ -46,12 +46,16 @@ export default class CommissionerController {
 
     const commissioner = new Commissioner()
     commissioner.fill({
-      ...payload,
+      full_name: payload.full_name,
+      title: payload.title,
+      email: payload.email,
+      phone: payload.phone ?? null,
+      biography: payload.biography ?? null,
       qualifications: payload.qualifications?.trim() || null,
       experience: payload.experience?.trim() || null,
       appointment_date: DateTime.fromISO(payload.appointment_date),
       term_end_date: DateTime.fromISO(payload.term_end_date),
-      status: payload.status || 'active',
+      status: (payload.status as 'active' | 'inactive') || 'active',
     })
 
     const image = request.file('profile_photo')
@@ -80,13 +84,24 @@ export default class CommissionerController {
     }
     const payload = await request.validateUsing(updateCommissionerValidator)
     commissioner.merge({
-      ...payload,
-      qualifications: payload.qualifications?.trim() || null,
-      experience: payload.experience?.trim() || null,
+      ...(payload.full_name ? { full_name: payload.full_name } : {}),
+      ...(payload.title ? { title: payload.title } : {}),
+      ...(payload.email ? { email: payload.email } : {}),
+      ...(payload.phone !== undefined ? { phone: payload.phone ?? null } : {}),
+      ...(payload.biography !== undefined ? { biography: payload.biography ?? null } : {}),
+      ...(payload.qualifications !== undefined
+        ? { qualifications: payload.qualifications?.trim() || null }
+        : {}),
+      ...(payload.experience !== undefined
+        ? { experience: payload.experience?.trim() || null }
+        : {}),
       ...(payload.appointment_date
         ? { appointment_date: DateTime.fromISO(payload.appointment_date) }
         : {}),
-      ...(payload.term_end_date ? { term_end_date: DateTime.fromISO(payload.term_end_date) } : {}),
+      ...(payload.term_end_date
+        ? { term_end_date: DateTime.fromISO(payload.term_end_date) }
+        : {}),
+      ...(payload.status ? { status: payload.status as 'active' | 'inactive' } : {}),
     })
 
     const image = request.file('profile_photo')
@@ -116,4 +131,3 @@ export default class CommissionerController {
     return { message: 'Commissioner Deleted' }
   }
 }
-

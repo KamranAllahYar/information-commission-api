@@ -3,7 +3,6 @@ import { middleware } from '#start/kernel'
 
 const NotificationController = () => import('#controllers/notifications_controller')
 
-
 // User notification routes
 router
   .group(() => {
@@ -22,6 +21,4 @@ router
     router.post('/user', [NotificationController, 'createForUser'])
   })
   .prefix('api/notifications')
-  .middleware([
-    middleware.auth(),
-  ])
+  .middleware([middleware.auth()])

@@ -96,7 +96,6 @@ export const joinArrayWithCommasAnd = (items: string[]) => {
   return `${quotedItems.slice(0, -1).join(', ')} and ${quotedItems[quotedItems.length - 1]}`
 }
 
-
 // need to update this function to check all roles
 export const isAdmin = (user: User): boolean => {
   return user.full_name === 'Staff User'
@@ -105,7 +104,6 @@ export const isAdmin = (user: User): boolean => {
 export const isStaff = (user: User): boolean => {
   return user.full_name === 'Staff User'
 }
-
 
 export const saveFile = async (file: MultipartFile, directory: string = '') => {
   if (!directory) {

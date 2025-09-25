@@ -1,87 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Your Account - OLA LSSU</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Verify Your Account - OLA LSSU
+    </title>
+  </head>
+  <body
+    style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb;"
+  >
+    <div
+      style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"
+    >
 
-    <!-- Header -->
-    <div style="background: linear-gradient(135deg, #0bae53 0%, #0c8040 100%); color: #ffffff; padding: 40px 32px; text-align: center;">
-      <div style="display: inline-block; width: 60px; height: 60px; background-color: #10b981; border-radius: 50%; margin-bottom: 20px; position: relative; line-height: 60px; font-size: 30px; font-weight: bold;">✓</div>
-      <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; color: #ffffff;">Verify Your Account</h1>
-      <div style="font-size: 16px; font-weight: 300; opacity: 0.9;">Complete your registration with OLA LSSU</div>
-    </div>
-
-    <!-- Main Content -->
-    <div style="padding: 32px;">
-      <div style="font-size: 18px; margin-bottom: 20px; color: #374151;">
-        Hello there!
+      <!-- Header -->
+      <div
+        style="background: linear-gradient(135deg, #0bae53 0%, #0c8040 100%); color: #ffffff; padding: 40px 32px; text-align: center;"
+      >
+        <div
+          style="display: inline-block; width: 60px; height: 60px; background-color: #10b981; border-radius: 50%; margin-bottom: 20px; position: relative; line-height: 60px; font-size: 30px; font-weight: bold;"
+        >
+          ✓
+        </div>
+        <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700; color: #ffffff;">
+          Verify Your Account
+        </h1>
+        <div style="font-size: 16px; font-weight: 300; opacity: 0.9;">
+          Complete your registration with OLA LSSU
+        </div>
       </div>
 
-      <div style="font-size: 16px; line-height: 1.7; color: #6b7280; margin-bottom: 30px;">
-        Welcome to OLA LSSU! To complete your account setup and ensure the security of your account, please verify your email address using the verification code below.
-      </div>
+      <!-- Main Content -->
+      <div style="padding: 32px;">
+        <div style="font-size: 18px; margin-bottom: 20px; color: #374151;">
+          Hello there!
+        </div>
 
-      <!-- OTP Code Section -->
-      <div style="background-color: #f9fafb; border-radius: 12px; padding: 32px 24px; text-align: center; margin: 24px 0; border: 2px dashed #d1d5db;">
-        <div style="font-size: 16px; color: #6b7280; margin-bottom: 16px; font-weight: 500;">Your verification code:</div>
-        <div style="font-size: 36px; font-weight: 700; color: #0bae53; letter-spacing: 8px; margin: 16px 0; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; background-color: #ffffff; padding: 16px 24px; border-radius: 8px; border: 1px solid #e5e7eb; display: inline-block;">{{ otp }}</div>
-        <div style="font-size: 14px; color: #9ca3af; margin-top: 16px; font-weight: 500;">⏰ This code expires in 10 minutes</div>
-      </div>
+        <div style="font-size: 16px; line-height: 1.7; color: #6b7280; margin-bottom: 30px;">
+          Welcome to OLA LSSU! To complete your account setup and ensure the security of your account, please verify your email address using the verification code below.
+        </div>
 
+        <!-- OTP Code Section -->
+        <div
+          style="background-color: #f9fafb; border-radius: 12px; padding: 32px 24px; text-align: center; margin: 24px 0; border: 2px dashed #d1d5db;"
+        >
+          <div style="font-size: 16px; color: #6b7280; margin-bottom: 16px; font-weight: 500;">
+            Your verification code:
+          </div>
+          <div
+            style="font-size: 36px; font-weight: 700; color: #0bae53; letter-spacing: 8px; margin: 16px 0; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; background-color: #ffffff; padding: 16px 24px; border-radius: 8px; border: 1px solid #e5e7eb; display: inline-block;"
+          >
+            {{ otp }}
+          </div>
+          <div style="font-size: 14px; color: #9ca3af; margin-top: 16px; font-weight: 500;">
+            ⏰ This code expires in 10 minutes
+          </div>
+        </div>
 
-      {{ url }}
-
-
-       <!-- Verification Button -->
-            <div style="text-align: center; margin: 32px 0;">
-              <!--[if mso]>
+        {{ url }}
+        <!-- Verification Button -->
+        <div style="text-align: center; margin: 32px 0;">
+          <!--[if mso]>
               <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ verificationUrl }}" style="height:50px;v-text-anchor:middle;width:280px;" arcsize="20%" stroke="f" fillcolor="#0bae53">
                 <w:anchorlock/>
                 <center>
-              <![endif]-->
-              <a href="{{ url }}" style="background-color: #0bae53; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 16px; display: inline-block; min-width: 200px; text-align: center; border: none; box-shadow: 0 4px 12px rgba(11, 174, 83, 0.3); transition: all 0.3s ease;">
-                🚀 Verify My Email Address
+          <![endif]-->
+          <a
+            href="{{ url }}"
+            style="background-color: #0bae53; color: #ffffff; padding: 16px 32px; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 16px; display: inline-block; min-width: 200px; text-align: center; border: none; box-shadow: 0 4px 12px rgba(11, 174, 83, 0.3); transition: all 0.3s ease;"
+          >
+            🚀 Verify My Email Address
               </a>
-              <!--[if mso]>
+          <!--[if mso]>
                 </center>
               </v:roundrect>
-              <![endif]-->
-            </div>
+          <![endif]-->
+        </div>
 
+        <!-- Security Notice -->
+        <div
+          style="background-color: #fef3c7; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin: 24px 0;"
+        >
+          <h4 style="color: #b45309; margin-bottom: 10px; font-size: 16px; font-weight: 600; margin-top: 0;">
+            🔒 Security Notice
+          </h4>
+          <p style="color: #78350f; line-height: 1.6; margin: 0;">
+            <strong>Keep this code confidential!</strong>This verification code is for your use only—never share it with anyone. If you didn't request it, please ignore this email; your account will remain secure.
+          </p>
+        </div>
 
-      <!-- Security Notice -->
-      <div style="background-color: #fef3c7; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin: 24px 0;">
-        <h4 style="color: #b45309; margin-bottom: 10px; font-size: 16px; font-weight: 600; margin-top: 0;">🔒 Security Notice</h4>
-        <p style="color: #78350f; line-height: 1.6; margin: 0;">
-          <strong>Keep this code confidential!</strong> This verification code is for your use only—never share it with anyone. If you didn't request it, please ignore this email; your account will remain secure.
+        <div style="font-size: 16px; line-height: 1.7; color: #6b7280;">
+          Having trouble with verification? Click the button above to verify your email automatically, or contact our support team for help.<br />
+          Thank you for joining OLA LSSU—we're excited to welcome you to the community!
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;"
+      >
+        <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
+          © OLA LSSU. All rights reserved.
+        </p>
+        <p style="color: #6b7280; font-size: 14px; margin: 0;">
+          This is an automated message. For support, contact us at
+        <a href="mailto:support@olalssu.com" style="color: #667eea; text-decoration: none;">support
+            @olalssu.com
+          </a>
         </p>
       </div>
-
-      <div style="font-size: 16px; line-height: 1.7; color: #6b7280;">
-        Having trouble with verification? Click the button above to verify your email automatically, or contact our support team for help.<br>
-        Thank you for joining OLA LSSU—we're excited to welcome you to the community!
-      </div>
     </div>
 
-    <!-- Footer -->
-    <div style="background-color: #f9fafb; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb;">
-      <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">© OLA LSSU. All rights reserved.</p>
-      <p style="color: #6b7280; font-size: 14px; margin: 0;">
-        This is an automated message. For support, contact us at
-        <a href="mailto:support@olalssu.com" style="color: #667eea; text-decoration: none;">support@olalssu.com</a>
-      </p>
-    </div>
-  </div>
-
-  <!-- Fallback for older email clients -->
-  <!--[if mso]>
-  <style>
+    <!-- Fallback for older email clients -->
+    <!--[if mso]>
+    <style>
     .otp-code { font-size: 32px !important; letter-spacing: 4px !important; }
-  </style>
-  <![endif]-->
-</body>
+    </style>
+    <![endif]-->
+  </body>
 </html>

@@ -8,12 +8,14 @@ export default class Complaints extends BaseSchema {
       table.increments('id')
 
       // Complaint Details
-      table.enum('type', [
-        'Refusal to Domain Information',
-        'Excessive Delay in Report',
-        'Unreasonable Fees Charged',
-        'Partial Information Provided',
-      ]).notNullable()
+      table
+        .enum('type', [
+          'Refusal to Domain Information',
+          'Excessive Delay in Report',
+          'Unreasonable Fees Charged',
+          'Partial Information Provided',
+        ])
+        .notNullable()
 
       table.string('public_body').notNullable()
       table.date('date_of_incident').notNullable()

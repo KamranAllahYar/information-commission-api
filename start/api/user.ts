@@ -40,5 +40,3 @@ router
   .get('/', [UsersController, 'existingUsers'])
   .prefix('api/existing-users')
   .use(middleware.auth())
-
-

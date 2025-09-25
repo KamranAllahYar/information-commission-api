@@ -17,7 +17,9 @@ export default class Requests extends BaseSchema {
 
       // Request details
       table.text('description_of_information').notNullable()
-      table.enum('manner_of_access', ['inspection', 'copy', 'viewing_listen', 'written_transcript']).notNullable()
+      table
+        .enum('manner_of_access', ['inspection', 'copy', 'viewing_listen', 'written_transcript'])
+        .notNullable()
       table.boolean('is_life_liberty').notNullable().defaultTo(false)
       table.text('life_liberty_details').nullable()
       table.enum('form_of_access', ['hard_copy', 'electronic_copy']).notNullable()

@@ -27,12 +27,14 @@ export const createComplaintValidator = vine.compile(
 export const updateComplaintValidator = vine.compile(
   vine.object({
     // Complaint details
-    type: vine.enum([
-      'Refusal to Domain Information',
-      'Excessive Delay in Report',
-      'Unreasonable Fees Charged',
-      'Partial Information Provided',
-    ]).optional(),
+    type: vine
+      .enum([
+        'Refusal to Domain Information',
+        'Excessive Delay in Report',
+        'Unreasonable Fees Charged',
+        'Partial Information Provided',
+      ])
+      .optional(),
     public_body: vine.string().optional(),
     date_of_incident: vine.string().optional(),
     description: vine.string().optional(),

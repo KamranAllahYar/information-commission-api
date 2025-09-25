@@ -16,7 +16,7 @@ export default class Commissioner extends BaseModel {
   declare email: string
 
   @column()
-  declare phone: string
+  declare phone: string | null
 
   @column()
   declare biography: string | null

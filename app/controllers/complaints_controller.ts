@@ -44,7 +44,7 @@ export default class ComplaintsController {
     complaint.fill({
       ...payload,
       priority: 'Low', // default
-      status: 'Open',  // default
+      status: 'Open', // default
     })
 
     await complaint.save()

@@ -1,16 +1,17 @@
-import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
-import User from 'App/Models/User'
+import { BaseSeeder } from '@adonisjs/lucid/seeders'
+import User from '#models/user'
 import { faker } from '@faker-js/faker'
 
 export default class UserSeeder extends BaseSeeder {
-  public async run () {
+  public async run() {
     await User.createMany(
-      Array.from({ length: 10 }).map((_, i) => ({
-        name: faker.person.fullName(),
+      Array.from({ length: 10 }).map(() => ({
+        full_name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
-        password: 'password123', // 🔒 you can hash automatically via User model hooks
-        role: 'Admin', // since you want 10 admin users
-        status: true, // assuming boolean active
+        password: 'password123',
+        role: 'admin' as 'admin',
+        is_admin: true,
+        is_active: true,
       }))
     )
   }

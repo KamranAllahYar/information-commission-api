@@ -19,5 +19,3 @@ export const updateAdminValidator = vine.compile(
     is_active: vine.boolean().optional(),
   })
 )
-
-
