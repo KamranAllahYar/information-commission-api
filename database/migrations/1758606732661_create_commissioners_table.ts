@@ -14,7 +14,7 @@ export default class Commissioners extends BaseSchema {
       table.text('qualifications').nullable() // ✅ new
       table.text('experience').nullable() // ✅ new
       table.string('profile_photo_url').nullable()
-      table.date('appointment_date').notNullable()
+      table.date('appointed_date').notNullable()
       table.date('term_end_date').notNullable()
       table.enum('status', ['active', 'inactive']).defaultTo('active')
       table.timestamp('created_at', { useTz: true })

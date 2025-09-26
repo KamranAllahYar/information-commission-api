@@ -19,6 +19,8 @@ import '#start/api/admins'
 import '#start/api/commissioner'
 import '#start/api/complaints'
 import '#start/api/requests'
+import '#start/api/resources'
+import '#start/api/news'
 
 router.get('/', async () => {
   return {

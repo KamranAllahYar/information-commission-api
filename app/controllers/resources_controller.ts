@@ -1,0 +1,156 @@
+import { HttpContext } from '@adonisjs/core/http'
+import {
+  createResourceValidator,
+  updateResourceValidator,
+  updateStatusValidator,
+} from '#validators/resource'
+import MediaController from '#controllers/media_controller'
+import Resource from '#models/resource'
+import drive from '@adonisjs/drive/services/main'
+
+export default class ResourcesController {
+  async index({ request }: HttpContext) {
+    const query = Resource.query()
+    if (request.input('sort_column') && request.input('sort_order')) {
+      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    }
+    if (request.input('status')) {
+      query.where('status', request.input('status'))
+    }
+    if (request.input('category')) {
+      query.where('category', request.input('category'))
+    }
+    if (request.input('search')) {
+      query.where('title', 'like', `%${request.input('search')}%`)
+    }
+
+    return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+  }
+
+  async show({ request, response }: HttpContext) {
+    const resource = await Resource.find(request.param('id'))
+    if (!resource) {
+      return response.notFound({
+        message: 'Resource not found',
+      })
+    }
+    return resource
+  }
+
+  async store({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(createResourceValidator)
+    const { title, description, type, category, status } = payload
+    const file = request.file('file', {
+      size: '10mb',
+    })
+    if (!file) {
+      response.badRequest({ message: 'File is required' })
+    }
+
+    const mediaController = new MediaController()
+    const media = await mediaController.saveMedia(file)
+    const resource = await Resource.create({
+      title,
+      description,
+      category,
+      status,
+      type,
+      file: media.path,
+      size: media.size,
+      mime: media.mime,
+    })
+    return response.ok({
+      message: 'Resource created successfully',
+      data: resource,
+    })
+  }
+  async update({ request, response }: HttpContext) {
+    const resource = await Resource.find(request.param('id'))
+    if (!resource) {
+      return response.notFound({
+        message: 'Resource not found',
+      })
+    }
+    const payload = await request.validateUsing(updateResourceValidator)
+    const { title, description, category, type, status } = payload
+    const file = request.file('file', {
+      size: '10mb',
+    })
+    if (file) {
+      const existingFile = await drive.use().exists(resource.file)
+      if (existingFile) {
+        await drive.use().delete(resource.file)
+      }
+      const mediaController = new MediaController()
+      const media = await mediaController.saveMedia(file)
+      resource.merge({
+        file: media.path,
+        size: media.size,
+        mime: media.mime,
+      })
+    }
+    resource.merge({
+      title,
+      description,
+      type,
+      category,
+      status,
+    })
+    await resource.save()
+    return response.ok({
+      message: 'Resource updated successfully',
+      data: resource,
+    })
+  }
+
+  async destroy({ request, response }: HttpContext) {
+    const id = request.param('id')
+    const resource = await Resource.find(id)
+    if (!resource) {
+      return response.notFound({
+        message: 'Resource not found',
+      })
+    }
+    const exists = await drive.use().exists(resource.file)
+    if (exists) {
+      await drive.use().delete(resource.file)
+      await resource.delete()
+      return {
+        message: 'Resource deleted successfully',
+      }
+    }
+  }
+
+  async updateStatus({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(updateStatusValidator)
+
+    const resource = await Resource.find(request.param('id'))
+    if (!resource) {
+      return response.notFound({
+        message: 'Resource not found',
+      })
+    }
+    resource.merge(payload)
+    await resource.save()
+    return {
+      message: 'Resource status updated successfully',
+    }
+  }
+
+  async downloadFile({ request, response }: HttpContext) {
+    const id = request.param('id')
+
+    const resource = await Resource.find(id)
+    if (!resource) {
+      return response.notFound({
+        message: 'Resource not found',
+      })
+    }
+    resource.download += 1
+    await resource.save()
+    return response.ok({
+      message: 'Resource downloaded successfully',
+      data: resource.file_url,
+    })
+  }
+}
