@@ -16,7 +16,7 @@ export default class extends BaseSchema {
       table.enum('status', ['draft', 'published']).defaultTo('draft').notNullable()
       table.timestamp('published_at').nullable()
       table.boolean('featured').defaultTo(false).notNullable()
-      table.integer('views').defaultTo(0).notNullable()
+      table.integer('view').defaultTo(0).notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').notNullable()
     })
