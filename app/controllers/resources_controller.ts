@@ -28,7 +28,7 @@ export default class ResourcesController {
   }
 
   async show({ request, response }: HttpContext) {
-    const resource = await Resource.find(request.param('id'))
+    const resource = await Resource.query().where('uuid', request.param('id')).first()
     if (!resource) {
       return response.notFound({
         message: 'Resource not found',
@@ -65,7 +65,7 @@ export default class ResourcesController {
     })
   }
   async update({ request, response }: HttpContext) {
-    const resource = await Resource.find(request.param('id'))
+    const resource = await Resource.query().where('uuid', request.param('id')).first()
     if (!resource) {
       return response.notFound({
         message: 'Resource not found',
@@ -105,7 +105,7 @@ export default class ResourcesController {
 
   async destroy({ request, response }: HttpContext) {
     const id = request.param('id')
-    const resource = await Resource.find(id)
+    const resource = await Resource.query().where('uuid', id).first()
     if (!resource) {
       return response.notFound({
         message: 'Resource not found',
@@ -124,7 +124,7 @@ export default class ResourcesController {
   async updateStatus({ request, response }: HttpContext) {
     const payload = await request.validateUsing(updateStatusValidator)
 
-    const resource = await Resource.find(request.param('id'))
+    const resource = await Resource.query().where('uuid', request.param('id')).first()
     if (!resource) {
       return response.notFound({
         message: 'Resource not found',
@@ -140,7 +140,7 @@ export default class ResourcesController {
   async downloadFile({ request, response }: HttpContext) {
     const id = request.param('id')
 
-    const resource = await Resource.find(id)
+    const resource = await Resource.query().where('uuid', id).first()
     if (!resource) {
       return response.notFound({
         message: 'Resource not found',

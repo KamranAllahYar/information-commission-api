@@ -1,10 +1,19 @@
-import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed, beforeCreate } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import { randomUUID } from 'node:crypto'
 import { getMediaUrl } from '#lib/helpers'
 
 export default class Resource extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
+
+  @column()
+  declare uuid: string
+
+  @beforeCreate()
+  static assignUuid(model: Resource) {
+    model.uuid = randomUUID()
+  }
 
   @column()
   declare title: string

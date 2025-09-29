@@ -1,9 +1,18 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import { randomUUID } from 'node:crypto'
 
 export default class Request extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
+
+  @column()
+  declare uuid: string
+
+  @beforeCreate()
+  static assignUuid(model: Request) {
+    model.uuid = randomUUID()
+  }
 
   // Applicant info
   @column({ columnName: 'name_of_applicant' })

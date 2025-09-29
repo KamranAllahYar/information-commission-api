@@ -6,6 +6,7 @@ export default class Commissioners extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+      table.string('uuid', 36).notNullable().unique()
       table.string('full_name').notNullable()
       table.string('title').notNullable()
       table.string('email').notNullable().unique()

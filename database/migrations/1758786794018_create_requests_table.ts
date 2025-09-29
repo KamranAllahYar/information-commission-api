@@ -6,6 +6,7 @@ export default class Requests extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+      table.string('uuid', 36).notNullable().unique()
 
       // Applicant info
       table.string('name_of_applicant').notNullable()

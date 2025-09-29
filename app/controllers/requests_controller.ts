@@ -6,21 +6,16 @@ import { createRequestValidator, updateRequestValidator } from '#validators/requ
 export default class RequestsController {
   // Get all requests (with optional search on applicant name/email/address)
   async index({ request, response }: HttpContext) {
-    const id = request.input('id')
-    if (id) {
-      const req = await Request.find(id)
-      if (!req) {
-        return response.notFound({ message: 'Request not found' })
-      }
-      return req
-    }
-
     const search = request.input('search')
+    const page = request.input('page', 1)
+    const pageSize = request.input('page_size', 10)
+
     const query = Request.query()
       .select([
         'id',
+        'uuid',
         'name_of_applicant',
-        'age',
+        'date_of_birth',
         'address',
         'telephone_number',
         'email',
@@ -46,7 +41,11 @@ export default class RequestsController {
         })
       })
 
-    return query // returns all requests (array)
+    if (request.input('sort_column') && request.input('sort_order')) {
+      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    }
+
+    return query.paginate(page, pageSize)
   }
 
   // Create request
@@ -83,7 +82,7 @@ export default class RequestsController {
   // Get by ID
   async show({ request, response }: HttpContext) {
     const id = request.param('id')
-    const req = await Request.find(id)
+    const req = await Request.query().where('uuid', id).first()
     if (!req) {
       return response.notFound({ message: 'Request not found' })
     }
@@ -93,7 +92,7 @@ export default class RequestsController {
   // Update request
   async update({ request, response }: HttpContext) {
     const id = request.param('id')
-    const req = await Request.find(id)
+    const req = await Request.query().where('uuid', id).first()
 
     if (!req) {
       return response.notFound({ message: 'Request not found' })
@@ -102,7 +101,7 @@ export default class RequestsController {
     const data = await request.validateUsing(updateRequestValidator)
     const payload = {
       ...(data.name_of_applicant ? { nameOfApplicant: data.name_of_applicant } : {}),
-      ...(data.date_of_birth !== undefined ? { dateOfBirth: data.date_of_birth } : {}),
+      ...(data.date_of_birth !== undefined ? { dateOfBirth: data.date_of_birth ?? undefined } : {}),
       ...(data.address !== undefined ? { address: data.address } : {}),
       ...(data.telephone_number ? { telephoneNumber: data.telephone_number } : {}),
       ...(data.email ? { email: data.email } : {}),
@@ -135,7 +134,7 @@ export default class RequestsController {
     if (Object.keys(payload).length === 0) {
       return response.badRequest({ message: 'No fields provided to update' })
     }
-    req.merge(payload)
+    req.merge(payload as any)
 
     await req.save()
     return { message: 'Request updated successfully', data: req }
@@ -144,7 +143,7 @@ export default class RequestsController {
   // Delete request
   async destroy({ request, response }: HttpContext) {
     const id = request.param('id')
-    const req = await Request.find(id)
+    const req = await Request.query().where('uuid', id).first()
     if (!req) {
       return response.notFound({ message: 'Request not found' })
     }

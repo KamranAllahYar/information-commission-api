@@ -28,7 +28,7 @@ export default class UsersController {
         'email',
         'full_name',
         'phone',
-        'civil_number',
+        // 'civil_number',
         // 'passport_number',
         'image_url',
         'verified_at',
@@ -38,7 +38,7 @@ export default class UsersController {
         q.where((searchQuery) => {
           searchQuery
             .where('email', 'LIKE', `%${search}%`)
-            .orWhere('civil_number', 'LIKE', `%${search}%`)
+            // .orWhere('civil_number', 'LIKE', `%${search}%`)
             .orWhere('phone', 'LIKE', `%${search}%`)
             // .orWhere('passport_number', 'LIKE', `%${search}%`)
             .orWhere('address', 'LIKE', `%${search}%`)
@@ -94,7 +94,8 @@ export default class UsersController {
     //   }
     // }
 
-    if (payload.user.civil_number) {
+    /*  if (payload.user.civil_number) {
+      /*
       existingUser = await User.findBy('civil_number', payload.user.civil_number)
       if (existingUser) {
         return response.conflict({
@@ -102,7 +103,7 @@ export default class UsersController {
           message: 'This civil number is already in use',
         })
       }
-    }
+    } */
 
     let role = null
     if (payload.role_id) {

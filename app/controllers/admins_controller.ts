@@ -15,8 +15,6 @@ export default class AdminsController {
         'uuid',
         'email',
         'full_name',
-        'phone',
-        'civil_number',
         'image_url',
         'verified_at',
         'is_active',
@@ -29,9 +27,7 @@ export default class AdminsController {
           searchQuery
             .where('email', 'LIKE', `%${search}%`)
             .orWhere('full_name', 'LIKE', `%${search}%`)
-            .orWhere('civil_number', 'LIKE', `%${search}%`)
-            .orWhere('phone', 'LIKE', `%${search}%`)
-            .orWhere('address', 'LIKE', `%${search}%`)
+            .orWhere('role', 'LIKE', `%${search}%`)
         })
       })
 

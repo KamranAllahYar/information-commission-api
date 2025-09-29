@@ -14,6 +14,7 @@ export default class CommissionerController {
     const query = Commissioner.query()
       .select([
         'id',
+        'uuid',
         'full_name',
         'title',
         'email',
@@ -34,6 +35,12 @@ export default class CommissionerController {
             .orWhere('title', 'LIKE', `%${search}%`)
         })
       })
+    if (request.input('status')) {
+      query.where('status', request.input('status'))
+    }
+    if (request.input('sort_column') && request.input('sort_order')) {
+      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    }
     return query.paginate(page, pageSize)
   }
 
@@ -69,7 +76,7 @@ export default class CommissionerController {
 
   async show({ request, response }: HttpContext) {
     const id = request.param('id')
-    const commissioner = await Commissioner.find(id)
+    const commissioner = await Commissioner.query().where('uuid', id).first()
     if (!commissioner) {
       return response.notFound({ message: 'Commissioner not found' })
     }
@@ -78,7 +85,7 @@ export default class CommissionerController {
 
   async update({ request, response }: HttpContext) {
     const id = request.param('id')
-    const commissioner = await Commissioner.find(id)
+    const commissioner = await Commissioner.query().where('uuid', id).first()
     if (!commissioner) {
       return response.notFound({ message: 'Commissioner not found' })
     }
@@ -119,7 +126,7 @@ export default class CommissionerController {
 
   async destroy({ request, response }: HttpContext) {
     const id = request.param('id')
-    const commissioner = await Commissioner.find(id)
+    const commissioner = await Commissioner.query().where('uuid', id).first()
     if (!commissioner) {
       return response.notFound({ message: 'Commissioner not found' })
     }

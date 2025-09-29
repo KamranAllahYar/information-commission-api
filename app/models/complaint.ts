@@ -1,5 +1,6 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
+import { randomUUID } from 'node:crypto'
 
 export default class Complaint extends BaseModel {
   @column({ isPrimary: true })
@@ -8,6 +9,14 @@ export default class Complaint extends BaseModel {
   // Complaint Details
   @column()
   declare type: string
+
+  @column()
+  declare uuid: string
+
+  @beforeCreate()
+  static assignUuid(model: Complaint) {
+    model.uuid = randomUUID()
+  }
 
   // @column()
   // declare publicBody: string

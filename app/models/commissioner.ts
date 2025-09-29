@@ -1,10 +1,19 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed, beforeCreate } from '@adonisjs/lucid/orm'
 import { getMediaUrl } from '#lib/helpers'
+import { randomUUID } from 'node:crypto'
 
 export default class Commissioner extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
+
+  @column()
+  declare uuid: string
+
+  @beforeCreate()
+  static assignUuid(model: Commissioner) {
+    model.uuid = randomUUID()
+  }
 
   @column()
   declare full_name: string
@@ -30,7 +39,7 @@ export default class Commissioner extends BaseModel {
   @column()
   declare profile_photo_url: string | null
 
-  @column.date()
+  @column.date({ columnName: 'appointed_date' })
   declare appointment_date: DateTime
 
   @column.date()

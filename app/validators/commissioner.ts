@@ -2,6 +2,7 @@ import vine from '@vinejs/vine'
 
 export const createCommissionerValidator = vine.compile(
   vine.object({
+
     full_name: vine.string(),
     title: vine.string(),
     email: vine.string(),

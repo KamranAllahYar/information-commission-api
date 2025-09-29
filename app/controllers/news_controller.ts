@@ -8,6 +8,7 @@ import drive from '@adonisjs/drive/services/main'
 export default class NewsController {
   async index({ request }: HttpContext) {
     const query = News.query()
+    // Optional filters
     if (request.input('sort_column') && request.input('sort_order')) {
       query.orderBy(request.input('sort_column'), request.input('sort_order'))
     }
@@ -24,7 +25,7 @@ export default class NewsController {
   }
 
   async show({ request, response }: HttpContext) {
-    const news = await News.find(request.param('id'))
+    const news = await News.query().where('uuid', request.param('id')).first()
     if (!news) {
       return response.notFound({
         message: 'News not found',
@@ -86,7 +87,7 @@ export default class NewsController {
   async update({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createNewsValidator)
     const { title, excerpt, content, category, status, featured } = payload
-    const news = await News.find(request.param('id'))
+    const news = await News.query().where('uuid', request.param('id')).first()
     if (!news) {
       return response.notFound({
         message: 'News not found',
@@ -140,7 +141,7 @@ export default class NewsController {
   }
 
   async destroy({ request, response }: HttpContext) {
-    const news = await News.find(request.param('id'))
+    const news = await News.query().where('uuid', request.param('id')).first()
     if (!news) {
       return response.notFound({
         message: 'News not found',

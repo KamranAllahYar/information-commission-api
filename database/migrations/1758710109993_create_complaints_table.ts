@@ -6,7 +6,7 @@ export default class Complaints extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
+      table.string('uuid', 36).notNullable().unique()
       // Complaint Details
       table
         .enum('type', [
