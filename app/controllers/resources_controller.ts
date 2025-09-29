@@ -22,9 +22,37 @@ export default class ResourcesController {
     }
     if (request.input('search')) {
       query.where('title', 'like', `%${request.input('search')}%`)
+      query.orWhere('description', 'like', `%${request.input('search')}%`)
     }
 
-    return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+    const resources: any = await query.paginate(
+      request.input('page', 1),
+      request.input('page_size', 10)
+    )
+
+    const { meta, data } = resources.toJSON()
+
+    // stats queries
+    const total = await Resource.query().count('* as total').first()
+    const draft = await Resource.query().where('status', 'draft').count('* as total').first()
+    const published = await Resource.query()
+      .where('status', 'published')
+      .count('* as total')
+      .first()
+    const totalDownloads = await Resource.query().sum('download as total').first()
+
+    return {
+      meta,
+      data: {
+        stats: {
+          total: total?.$extras.total || 0,
+          draft: draft?.$extras.total || 0,
+          published: published?.$extras.total || 0,
+          totalDownloads: totalDownloads?.$extras.total || 0,
+        },
+        data,
+      },
+    }
   }
 
   async show({ request, response }: HttpContext) {
