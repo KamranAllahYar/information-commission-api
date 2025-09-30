@@ -143,9 +143,9 @@ export default class ResourcesController {
     if (exists) {
       await drive.use().delete(resource.file)
       await resource.delete()
-      return {
+      return response.ok({
         message: 'Resource deleted successfully',
-      }
+      })
     }
   }
 
