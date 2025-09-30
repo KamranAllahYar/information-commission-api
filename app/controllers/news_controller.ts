@@ -21,7 +21,57 @@ export default class NewsController {
     if (request.input('search')) {
       query.where('title', 'like', `%${request.input('search')}%`)
     }
+    const page = request.input('page', 1)
+    const pageSize = request.input('page_size', 10)
+    const paginator = await query.paginate(page, pageSize)
+    const json = paginator.toJSON()
+    const [
+      totalCount,
+      publishedCount,
+      draftCount,
+    ] = await Promise.all([
+      News.query().count('* as total').then(r => Number(r[0].$extras.total)),
+      News.query().where('status', 'Published').count('* as total').then(r => Number(r[0].$extras.total)),
+      News.query().where('status', 'Draft').count('* as total').then(r => Number(r[0].$extras.total)),
+    ])
+    return {
+      meta: {
+        total: json.meta.total,
+        per_page: json.meta.perPage,
+        current_page: json.meta.currentPage,
+        last_page: json.meta.lastPage,
+        first_page: 1,
+        first_page_url: `/?page=1`,
+        last_page_url: `/?page=${json.meta.lastPage}`,
+        next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
+        previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
+        total_news: totalCount,
+        published_news: publishedCount,
+        draft_news: draftCount,
+        total_views: 2000,
+      },
+      data: json.data,
+    }
+    // return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+  }
+
+  async public({ request }: HttpContext) {
+    const query = News.query()
+    query.where('status', 'published')
     return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+  }
+
+  async publicShow({ request, response }: HttpContext) {
+    const news = await News.query().where('uuid', request.param('id')).where('status', 'published').first()
+    if (!news) {
+      return response.notFound({
+        message: 'News not found',
+      })
+    }
+    return response.ok({
+      message: 'News found',
+      data: news,
+    })
   }
 
   async show({ request, response }: HttpContext) {

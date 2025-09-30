@@ -7,6 +7,11 @@ router
   .group(() => {
     router.get('/', [ResourceController, 'index'])
     router.get('/:id', [ResourceController, 'show'])
+  })
+  .prefix('api/resources')
+
+router
+  .group(() => {
     router.post('/', [ResourceController, 'store']).use(middleware.is_admin())
     router.put('/:id/status', [ResourceController, 'updateStatus']).use(middleware.is_admin())
     router.put('/:id', [ResourceController, 'update']).use(middleware.is_admin())

@@ -66,6 +66,19 @@ export default class ComplaintsController {
 
     const paginator = await query.paginate(page, pageSize)
     const json = paginator.toJSON()
+    // Fetch total counts for all, open, investigating, and resolved complaints
+    const [
+      totalCount,
+      openCount,
+      investigatingCount,
+      resolvedCount,
+    ] = await Promise.all([
+      Complaint.query().count('* as total').then(r => Number(r[0].$extras.total)),
+      Complaint.query().where('status', 'Open').count('* as total').then(r => Number(r[0].$extras.total)),
+      Complaint.query().where('status', 'Investigating').count('* as total').then(r => Number(r[0].$extras.total)),
+      Complaint.query().where('status', 'Resolved').count('* as total').then(r => Number(r[0].$extras.total)),
+    ])
+
     return {
       meta: {
         total: json.meta.total,
@@ -77,6 +90,11 @@ export default class ComplaintsController {
         last_page_url: `/?page=${json.meta.lastPage}`,
         next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
         previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
+        // Add counts for frontend dashboard
+        total_complaints: totalCount,
+        open_complaints: openCount,
+        investigating_complaints: investigatingCount,
+        resolved_complaints: resolvedCount,
       },
       data: json.data,
     }

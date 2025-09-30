@@ -41,7 +41,38 @@ export default class CommissionerController {
     if (request.input('sort_column') && request.input('sort_order')) {
       query.orderBy(request.input('sort_column'), request.input('sort_order'))
     }
-    return query.paginate(page, pageSize)
+    const paginator = await query.paginate(page, pageSize)
+    const json = paginator.toJSON()
+
+    // Counts for dashboard/meta
+    const [
+      totalCount,
+      activeCount,
+      inactiveCount,
+    ] = await Promise.all([
+      Commissioner.query().count('* as total').then((r) => Number(r[0].$extras.total)),
+      Commissioner.query().where('status', 'active').count('* as total').then((r) => Number(r[0].$extras.total)),
+      Commissioner.query().where('status', 'inactive').count('* as total').then((r) => Number(r[0].$extras.total)),
+    ])
+
+    return {
+      meta: {
+        total: json.meta.total,
+        per_page: json.meta.perPage,
+        current_page: json.meta.currentPage,
+        last_page: json.meta.lastPage,
+        first_page: 1,
+        first_page_url: `/?page=1`,
+        last_page_url: `/?page=${json.meta.lastPage}`,
+        next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
+        previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
+        // Additional counts
+        total_commissioners: totalCount,
+        active_commissioners: activeCount,
+        inactive_commissioners: inactiveCount,
+      },
+      data: json.data,
+    }
   }
 
   async store({ request, response }: HttpContext) {
