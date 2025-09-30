@@ -24,6 +24,25 @@ export default class NewsController {
     return await query.paginate(request.input('page', 1), request.input('page_size', 10))
   }
 
+  async public({ request }: HttpContext) {
+    const query = News.query()
+    query.where('status', 'published')
+    return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+  }
+
+  async publicShow({ request, response }: HttpContext) {
+    const news = await News.query().where('uuid', request.param('id')).where('status', 'published').first()
+    if (!news) {
+      return response.notFound({
+        message: 'News not found',
+      })
+    }
+    return response.ok({
+      message: 'News found',
+      data: news,
+    })
+  }
+
   async show({ request, response }: HttpContext) {
     const news = await News.query().where('uuid', request.param('id')).first()
     if (!news) {
