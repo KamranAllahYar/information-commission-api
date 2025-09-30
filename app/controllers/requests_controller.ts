@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Request from '#models/request'
 
 import { createRequestValidator, updateRequestValidator } from '#validators/request'
+import { DateTime } from 'luxon'
 
 export default class RequestsController {
   // Get all requests (with optional search on applicant name/email/address)
@@ -19,6 +20,7 @@ export default class RequestsController {
         'address',
         'telephone_number',
         'email',
+        'status',
         'type_of_applicant',
         'description_of_information',
         'manner_of_access',
@@ -45,7 +47,49 @@ export default class RequestsController {
       query.orderBy(request.input('sort_column'), request.input('sort_order'))
     }
 
-    return query.paginate(page, pageSize)
+    const status = request.input('status') as string | undefined
+    if (status) {
+      const map: Record<string, string> = {
+        pending: 'pending',
+        inreview: 'inreview',
+        completed: 'completed',
+      }
+      const normalized = map[String(status).toLowerCase()]
+      if (normalized) query.where('status', normalized)
+    }
+
+
+
+    const paginator = await query.paginate(page, pageSize)
+    const json = paginator.toJSON()
+
+    // Aggregate counts for dashboard/meta
+    const [totalCount, pendingCount, inReviewCount, completedCount] = await Promise.all([
+      Request.query().count('* as total').then((r) => Number(r[0].$extras.total)),
+      Request.query().where('status', 'pending').count('* as total').then((r) => Number(r[0].$extras.total)),
+      Request.query().where('status', 'inreview').count('* as total').then((r) => Number(r[0].$extras.total)),
+      Request.query().where('status', 'completed').count('* as total').then((r) => Number(r[0].$extras.total)),
+    ])
+
+    return {
+      meta: {
+        total: json.meta.total,
+        per_page: json.meta.perPage,
+        current_page: json.meta.currentPage,
+        last_page: json.meta.lastPage,
+        first_page: 1,
+        first_page_url: `/?page=1`,
+        last_page_url: `/?page=${json.meta.lastPage}`,
+        next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
+        previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
+        // Additional counts
+        total_requests: totalCount,
+        pending_requests: pendingCount,
+        inreview_requests: inReviewCount,
+        completed_requests: completedCount,
+      },
+      data: json.data,
+    }
   }
 
   // Create request
@@ -54,10 +98,11 @@ export default class RequestsController {
 
     const payload = {
       nameOfApplicant: data.name_of_applicant,
-      dateOfBirth: data.date_of_birth,
+      dateOfBirth: data.date_of_birth as unknown as DateTime,
       address: data.address,
       telephoneNumber: data.telephone_number,
       email: data.email,
+      status: data.status as 'pending' | 'inreview' | 'completed',
       typeOfApplicant: data.type_of_applicant,
       description: data.description_of_information,
       mannerOfAccess: data.manner_of_access,
@@ -105,6 +150,7 @@ export default class RequestsController {
       ...(data.address !== undefined ? { address: data.address } : {}),
       ...(data.telephone_number ? { telephoneNumber: data.telephone_number } : {}),
       ...(data.email ? { email: data.email } : {}),
+      ...(data.status ? { status: data.status as 'pending' | 'inreview' | 'completed' } : {}),
       ...(data.type_of_applicant ? { typeOfApplicant: data.type_of_applicant } : {}),
       ...(data.description_of_information ? { description: data.description_of_information } : {}),
       ...(data.manner_of_access ? { mannerOfAccess: data.manner_of_access } : {}),
