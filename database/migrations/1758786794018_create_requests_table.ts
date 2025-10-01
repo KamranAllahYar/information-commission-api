@@ -15,7 +15,7 @@ export default class Requests extends BaseSchema {
       table.string('telephone_number').notNullable()
       table.string('email').notNullable()
       table.enum('type_of_applicant', ['individual', 'organization']).notNullable()
-      table.enum('status', ['pending', 'inreview', 'completed']).notNullable().defaultTo('pending')
+      table.enum('status', ['pending', 'in_review', 'completed']).notNullable().defaultTo('pending')
       // Request details
       table.text('description_of_information').notNullable()
       table
