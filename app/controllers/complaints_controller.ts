@@ -1,102 +1,71 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
 import Complaint from '#models/complaint'
 import { createComplaintValidator, updateComplaintValidator } from '#validators/complaint'
 
 export default class ComplaintsController {
-  // Get all complaints
   async index({ request }: HttpContext) {
-    const search = request.input('search')
-    const page = request.input('page', 1)
-    const pageSize = request.input('page_size', 10)
-
     const query = Complaint.query()
-      .select([
-        'id',
-        'uuid',
-        'type',
-        'date_of_incident',
-        'description',
-        'remedy_sought',
-        'full_name',
-        'email',
-        'phone',
-        'address',
-        'national_id',
-        'passport_number',
-        'priority',
-        'status',
-        'created_at',
-      ])
-      .if(search, (q) => {
-        q.where((qb) => {
-          qb.where('full_name', 'LIKE', `%${search}%`)
-            .orWhere('email', 'LIKE', `%${search}%`)
-            .orWhere('address', 'LIKE', `%${search}%`)
-            .orWhere('national_id', 'LIKE', `%${search}%`)
-            .orWhere('passport_number', 'LIKE', `%${search}%`)
-        })
-      })
 
-    const status = request.input('status') as string | undefined
-    const priority = request.input('priority') as string | undefined
-
-    if (status) {
-      // Normalize to DB values 'Open' | 'Investigating' | 'Resolved'
-      const map: Record<string, string> = {
-        open: 'Open',
-        investigating: 'Investigating',
-        resolved: 'Resolved',
-      }
-      const normalized = map[String(status).toLowerCase()]
-      if (normalized) query.where('status', normalized)
-    }
-    if (priority) {
-      // Normalize to DB values 'High' | 'Medium' | 'Low'
-      const map: Record<string, string> = {
-        high: 'High',
-        medium: 'Medium',
-        low: 'Low',
-      }
-      const normalized = map[String(priority).toLowerCase()]
-      if (normalized) query.where('priority', normalized)
-    }
     if (request.input('sort_column') && request.input('sort_order')) {
-      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+      const sortColumn = request.input('sort_column')
+      const sortOrder = request.input('sort_order')
+
+      // Handle sample_id sorting with numerical order (for COMP-XX format)
+      if (sortColumn === 'sample_id') {
+        query.orderByRaw(`CAST(SUBSTRING(sample_id, 6) AS UNSIGNED) ${sortOrder.toUpperCase()}`)
+      } else {
+        query.orderBy(sortColumn, sortOrder)
+      }
+    } else {
+      // Default sorting: highest complaint ID first
+      query.orderByRaw('CAST(SUBSTRING(sample_id, 6) AS UNSIGNED) DESC')
     }
 
-    const paginator = await query.paginate(page, pageSize)
-    const json = paginator.toJSON()
-    // Fetch total counts for all, open, investigating, and resolved complaints
-    const [
-      totalCount,
-      openCount,
-      investigatingCount,
-      resolvedCount,
-    ] = await Promise.all([
-      Complaint.query().count('* as total').then(r => Number(r[0].$extras.total)),
-      Complaint.query().where('status', 'Open').count('* as total').then(r => Number(r[0].$extras.total)),
-      Complaint.query().where('status', 'Investigating').count('* as total').then(r => Number(r[0].$extras.total)),
-      Complaint.query().where('status', 'Resolved').count('* as total').then(r => Number(r[0].$extras.total)),
-    ])
+    // Filtering
+    if (request.input('status')) {
+      query.where('status', request.input('status'))
+    }
+    if (request.input('priority')) {
+      query.where('priority', request.input('priority'))
+    }
+    if (request.input('category')) {
+      query.where('category', request.input('category'))
+    }
+    if (request.input('search')) {
+      query.where('full_name', 'like', `%${request.input('search')}%`)
+      query.orWhere('email', 'like', `%${request.input('search')}%`)
+      query.orWhere('address', 'like', `%${request.input('search')}%`)
+      query.orWhere('national_id', 'like', `%${request.input('search')}%`)
+      query.orWhere('passport_number', 'like', `%${request.input('search')}%`)
+    }
+
+    const complaints: any = await query.paginate(
+      request.input('page', 1),
+      request.input('page_size', 10)
+    )
+
+    const { meta, data } = complaints.toJSON()
+
+    // stats queries
+    const total = await Complaint.query().count('* as total').first()
+    const open = await Complaint.query().where('status', 'Open').count('* as total').first()
+    const investigating = await Complaint.query()
+      .where('status', 'Investigating')
+      .count('* as total')
+      .first()
+    const resolved = await Complaint.query().where('status', 'Resolved').count('* as total').first()
 
     return {
-      meta: {
-        total: json.meta.total,
-        per_page: json.meta.perPage,
-        current_page: json.meta.currentPage,
-        last_page: json.meta.lastPage,
-        first_page: 1,
-        first_page_url: `/?page=1`,
-        last_page_url: `/?page=${json.meta.lastPage}`,
-        next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
-        previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
-        // Add counts for frontend dashboard
-        total_complaints: totalCount,
-        open_complaints: openCount,
-        investigating_complaints: investigatingCount,
-        resolved_complaints: resolvedCount,
+      meta,
+      data: {
+        stats: {
+          total: total?.$extras.total || 0,
+          open: open?.$extras.total || 0,
+          investigating: investigating?.$extras.total || 0,
+          resolved: resolved?.$extras.total || 0,
+        },
+        data,
       },
-      data: json.data,
     }
   }
 
@@ -112,7 +81,7 @@ export default class ComplaintsController {
     })
 
     await complaint.save()
-    return response.created({ message: 'Complaint submitted successfully', data: complaint })
+    return response.ok({ message: 'Complaint submitted successfully', data: complaint })
   }
 
   // Get by ID
@@ -137,7 +106,7 @@ export default class ComplaintsController {
     complaint.merge(payload)
 
     await complaint.save()
-    return { message: 'Complaint updated successfully', data: complaint }
+    return response.ok({ message: 'Complaint updated successfully', data: complaint })
   }
 
   // Delete (admin side)
@@ -149,6 +118,6 @@ export default class ComplaintsController {
     }
 
     await complaint.delete()
-    return { message: 'Complaint deleted successfully' }
+    return response.ok({ message: 'Complaint deleted successfully' })
   }
 }

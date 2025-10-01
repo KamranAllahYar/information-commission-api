@@ -10,6 +10,16 @@ export default class Commissioner extends BaseModel {
   @column()
   declare uuid: string
 
+  @column()
+  declare sampleID: string
+
+  @beforeCreate()
+  static async assignSampleID(model: Commissioner) {
+    const lastCommissioner = await Commissioner.query().orderBy('id', 'desc').first()
+    const nextId = lastCommissioner ? lastCommissioner.id + 1 : 1
+    model.sampleID = `COM-${nextId}`
+  }
+
   @beforeCreate()
   static assignUuid(model: Commissioner) {
     model.uuid = randomUUID()
@@ -40,7 +50,7 @@ export default class Commissioner extends BaseModel {
   declare profile_photo_url: string | null
 
   @column.date({ columnName: 'appointed_date' })
-  declare appointment_date: DateTime
+  declare appointed_date: DateTime
 
   @column.date()
   declare term_end_date: DateTime

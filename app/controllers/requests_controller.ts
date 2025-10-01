@@ -1,94 +1,61 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
 import Request from '#models/request'
 
 import { createRequestValidator, updateRequestValidator } from '#validators/request'
 import { DateTime } from 'luxon'
 
 export default class RequestsController {
-  // Get all requests (with optional search on applicant name/email/address)
-  async index({ request, response }: HttpContext) {
-    const search = request.input('search')
-    const page = request.input('page', 1)
-    const pageSize = request.input('page_size', 10)
-
+  async index({ request }: HttpContext) {
     const query = Request.query()
-      .select([
-        'id',
-        'uuid',
-        'name_of_applicant',
-        'date_of_birth',
-        'address',
-        'telephone_number',
-        'email',
-        'status',
-        'type_of_applicant',
-        'description_of_information',
-        'manner_of_access',
-        'is_life_liberty',
-        'life_liberty_details',
-        'form_of_access',
-        'date_of_submission',
-        'witness_signature',
-        'witness_statement',
-        'receipt_officer_name',
-        'institution_stamp',
-        'date_of_receipt',
-        'created_at',
-      ])
-      .if(search, (q) => {
-        q.where((qb) => {
-          qb.where('name_of_applicant', 'LIKE', `%${search}%`)
-            .orWhere('email', 'LIKE', `%${search}%`)
-            .orWhere('address', 'LIKE', `%${search}%`)
-        })
-      })
 
+    // Sorting functionality
     if (request.input('sort_column') && request.input('sort_order')) {
       query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    } else {
+      // Default sorting: newest first
+      query.orderBy('created_at', 'desc')
     }
 
-    const status = request.input('status') as string | undefined
-    if (status) {
-      const map: Record<string, string> = {
-        pending: 'pending',
-        inreview: 'inreview',
-        completed: 'completed',
-      }
-      const normalized = map[String(status).toLowerCase()]
-      if (normalized) query.where('status', normalized)
+    // Filtering
+    if (request.input('status')) {
+      query.where('status', request.input('status'))
+    }
+    if (request.input('sample_id')) {
+      query.where('sample_id', request.input('sample_id'))
+    }
+    if (request.input('type_of_applicant')) {
+      query.where('type_of_applicant', request.input('type_of_applicant'))
+    }
+    if (request.input('search')) {
+      query.where('name_of_applicant', 'like', `%${request.input('search')}%`)
+      query.orWhere('email', 'like', `%${request.input('search')}%`)
+      query.orWhere('address', 'like', `%${request.input('search')}%`)
     }
 
+    const requests: any = await query.paginate(
+      request.input('page', 1),
+      request.input('page_size', 10)
+    )
 
+    const { meta, data } = requests.toJSON()
 
-    const paginator = await query.paginate(page, pageSize)
-    const json = paginator.toJSON()
-
-    // Aggregate counts for dashboard/meta
-    const [totalCount, pendingCount, inReviewCount, completedCount] = await Promise.all([
-      Request.query().count('* as total').then((r) => Number(r[0].$extras.total)),
-      Request.query().where('status', 'pending').count('* as total').then((r) => Number(r[0].$extras.total)),
-      Request.query().where('status', 'inreview').count('* as total').then((r) => Number(r[0].$extras.total)),
-      Request.query().where('status', 'completed').count('* as total').then((r) => Number(r[0].$extras.total)),
-    ])
+    // stats queries
+    const total = await Request.query().count('* as total').first()
+    const pending = await Request.query().where('status', 'pending').count('* as total').first()
+    const inreview = await Request.query().where('status', 'inreview').count('* as total').first()
+    const completed = await Request.query().where('status', 'completed').count('* as total').first()
 
     return {
-      meta: {
-        total: json.meta.total,
-        per_page: json.meta.perPage,
-        current_page: json.meta.currentPage,
-        last_page: json.meta.lastPage,
-        first_page: 1,
-        first_page_url: `/?page=1`,
-        last_page_url: `/?page=${json.meta.lastPage}`,
-        next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
-        previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
-        // Additional counts
-        total_requests: totalCount,
-        pending_requests: pendingCount,
-        inreview_requests: inReviewCount,
-        completed_requests: completedCount,
+      meta,
+      data: {
+        stats: {
+          total: total?.$extras.total || 0,
+          pending: pending?.$extras.total || 0,
+          inreview: inreview?.$extras.total || 0,
+          completed: completed?.$extras.total || 0,
+        },
+        data,
       },
-      data: json.data,
     }
   }
 
@@ -121,13 +88,40 @@ export default class RequestsController {
     req.fill(payload)
 
     await req.save()
-    return response.created({ message: 'Request submitted successfully', data: req })
+    return response.ok({ message: 'Request submitted successfully', data: req })
   }
 
   // Get by ID
   async show({ request, response }: HttpContext) {
     const id = request.param('id')
-    const req = await Request.query().where('uuid', id).first()
+    const req = await Request.query()
+      .select([
+        'id',
+        'uuid',
+        'sample_id',
+        'name_of_applicant',
+        'date_of_birth',
+        'address',
+        'telephone_number',
+        'email',
+        'status',
+        'type_of_applicant',
+        'description_of_information',
+        'manner_of_access',
+        'is_life_liberty',
+        'life_liberty_details',
+        'form_of_access',
+        'date_of_submission',
+        'witness_signature',
+        'witness_statement',
+        'receipt_officer_name',
+        'institution_stamp',
+        'date_of_receipt',
+        'created_at',
+        'updated_at',
+      ])
+      .where('uuid', id)
+      .first()
     if (!req) {
       return response.notFound({ message: 'Request not found' })
     }
@@ -137,7 +131,34 @@ export default class RequestsController {
   // Update request
   async update({ request, response }: HttpContext) {
     const id = request.param('id')
-    const req = await Request.query().where('uuid', id).first()
+    const req = await Request.query()
+      .select([
+        'id',
+        'uuid',
+        'sample_id',
+        'name_of_applicant',
+        'date_of_birth',
+        'address',
+        'telephone_number',
+        'email',
+        'status',
+        'type_of_applicant',
+        'description_of_information',
+        'manner_of_access',
+        'is_life_liberty',
+        'life_liberty_details',
+        'form_of_access',
+        'date_of_submission',
+        'witness_signature',
+        'witness_statement',
+        'receipt_officer_name',
+        'institution_stamp',
+        'date_of_receipt',
+        'created_at',
+        'updated_at',
+      ])
+      .where('uuid', id)
+      .first()
 
     if (!req) {
       return response.notFound({ message: 'Request not found' })
@@ -183,18 +204,18 @@ export default class RequestsController {
     req.merge(payload as any)
 
     await req.save()
-    return { message: 'Request updated successfully', data: req }
+    return response.ok({ message: 'Request updated successfully', data: req })
   }
 
   // Delete request
   async destroy({ request, response }: HttpContext) {
     const id = request.param('id')
-    const req = await Request.query().where('uuid', id).first()
+    const req = await Request.query().select(['id', 'uuid']).where('uuid', id).first()
     if (!req) {
       return response.notFound({ message: 'Request not found' })
     }
 
     await req.delete()
-    return { message: 'Request deleted successfully' }
+    return response.ok({ message: 'Request deleted successfully' })
   }
 }

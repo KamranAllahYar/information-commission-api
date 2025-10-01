@@ -9,6 +9,16 @@ export default class Request extends BaseModel {
   @column()
   declare uuid: string
 
+  @column()
+  declare sampleID: string
+
+  @beforeCreate()
+  static async assignSampleID(model: Request) {
+    const lastRequest = await Request.query().select(['id']).orderBy('id', 'desc').first()
+    const nextId = lastRequest ? lastRequest.id + 1 : 1
+    model.sampleID = `REQ-${nextId}`
+  }
+
   @beforeCreate()
   static assignUuid(model: Request) {
     model.uuid = randomUUID()

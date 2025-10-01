@@ -7,7 +7,7 @@ export default class Requests extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('uuid', 36).notNullable().unique()
-
+      table.string('sample_id').nullable().unique()
       // Applicant info
       table.string('name_of_applicant').notNullable()
       table.date('date_of_birth').notNullable()
