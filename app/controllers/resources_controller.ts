@@ -20,6 +20,9 @@ export default class ResourcesController {
     if (request.input('category')) {
       query.where('category', request.input('category'))
     }
+    if (request.input('type')) {
+      query.where('type', request.input('type'))
+    }
     if (request.input('search')) {
       query.where('title', 'like', `%${request.input('search')}%`)
       query.orWhere('description', 'like', `%${request.input('search')}%`)
