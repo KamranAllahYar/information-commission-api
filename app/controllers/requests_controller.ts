@@ -218,4 +218,90 @@ export default class RequestsController {
     await req.delete()
     return response.ok({ message: 'Request deleted successfully' })
   }
+
+  // Export requests to CSV
+  async exportCsv({ response }: HttpContext) {
+    const requests = await Request.query()
+      .select([
+        'id',
+        'name_of_applicant',
+        'date_of_birth',
+        'address',
+        'telephone_number',
+        'email',
+        'status',
+        'type_of_applicant',
+        'description_of_information',
+        'manner_of_access',
+        'is_life_liberty',
+        'life_liberty_details',
+        'form_of_access',
+        'date_of_submission',
+        'witness_signature',
+        'witness_statement',
+        'receipt_officer_name',
+        'institution_stamp',
+        'date_of_receipt',
+      ])
+      .orderBy('id', 'asc')
+
+    // CSV headers
+    const headers = [
+      'Request ID',
+      'Applicant Name',
+      'Date of Birth',
+      'Address',
+      'Telephone Number',
+      'Email',
+      'Status',
+      'Type of Applicant',
+      'Description of Information',
+      'Manner of Access',
+      'Is Life Liberty',
+      'Life Liberty Details',
+      'Form of Access',
+      'Date of Submission',
+      'Witness Signature',
+      'Witness Statement',
+      'Receipt Officer Name',
+      'Institution Stamp',
+      'Date of Receipt',
+    ]
+
+    // Convert data to CSV format
+    const csvRows = [headers.join(',')]
+
+    requests.forEach((request) => {
+      const row = [
+        `REQ-${request.id}`,
+        `"${(request.nameOfApplicant || '').replace(/"/g, '""')}"`,
+        request.dateOfBirth || '',
+        `"${(request.address || '').replace(/"/g, '""')}"`,
+        request.telephoneNumber || '',
+        request.email || '',
+        request.status || '',
+        request.typeOfApplicant || '',
+        `"${(request.description || '').replace(/"/g, '""')}"`,
+        request.mannerOfAccess || '',
+        request.isLifeLiberty ? 'Yes' : 'No',
+        `"${(request.lifeLibertyDetails || '').replace(/"/g, '""')}"`,
+        request.formOfAccess || '',
+        request.dateOfSubmission || '',
+        `"${(request.witnessSignature || '').replace(/"/g, '""')}"`,
+        `"${(request.witnessStatement || '').replace(/"/g, '""')}"`,
+        `"${(request.officerName || '').replace(/"/g, '""')}"`,
+        `"${(request.institutionStamp || '').replace(/"/g, '""')}"`,
+        request.dateOfReceipt || '',
+      ]
+      csvRows.push(row.join(','))
+    })
+
+    const csvContent = csvRows.join('\n')
+    const timestamp = DateTime.now().toFormat('yyyy-MM-dd_HH-mm-ss')
+    const filename = `information_requests_${timestamp}.csv`
+
+    response.header('Content-Type', 'text/csv')
+    response.header('Content-Disposition', `attachment; filename="${filename}"`)
+    return response.send(csvContent)
+  }
 }

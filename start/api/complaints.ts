@@ -11,7 +11,10 @@ router
   .prefix('api/complaints')
   .use(middleware.auth()) // Delete complaint
 router
-  .get('/', [ComplaintsController, 'index'])
+  .group(() => {
+    router.get('/', [ComplaintsController, 'index']) // Get all complaints (paginated)
+    router.get('/export/csv', [ComplaintsController, 'exportCsv']) // Export CSV
+  })
   .prefix('api/complaints')
   .use(middleware.auth())
-  .use(middleware.is_admin()) // Get all complaints (paginated)
+  .use(middleware.is_admin())

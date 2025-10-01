@@ -1,6 +1,7 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Complaint from '#models/complaint'
 import { createComplaintValidator, updateComplaintValidator } from '#validators/complaint'
+import { DateTime } from 'luxon'
 
 export default class ComplaintsController {
   async index({ request }: HttpContext) {
@@ -119,5 +120,73 @@ export default class ComplaintsController {
 
     await complaint.delete()
     return response.ok({ message: 'Complaint deleted successfully' })
+  }
+
+  // Export complaints to CSV
+  async exportCsv({ response }: HttpContext) {
+    const complaints = await Complaint.query()
+      .select([
+        'id',
+        'type',
+        'date_of_incident',
+        'description',
+        'remedy_sought',
+        'full_name',
+        'email',
+        'phone',
+        'address',
+        'national_id',
+        'passport_number',
+        'priority',
+        'status',
+      ])
+      .orderBy('id', 'asc')
+
+    // CSV headers
+    const headers = [
+      'Complaint ID',
+      'Type',
+      'Date of Incident',
+      'Description',
+      'Remedy Sought',
+      'Full Name',
+      'Email',
+      'Phone',
+      'Address',
+      'National ID',
+      'Passport Number',
+      'Priority',
+      'Status',
+    ]
+
+    // Convert data to CSV format
+    const csvRows = [headers.join(',')]
+
+    complaints.forEach((complaint) => {
+      const row = [
+        `COMP-${complaint.id}`,
+        complaint.type || '',
+        complaint.dateOfIncident || '',
+        `"${(complaint.description || '').replace(/"/g, '""')}"`,
+        `"${(complaint.remedySought || '').replace(/"/g, '""')}"`,
+        `"${(complaint.fullName || '').replace(/"/g, '""')}"`,
+        complaint.email || '',
+        complaint.phone || '',
+        `"${(complaint.address || '').replace(/"/g, '""')}"`,
+        complaint.nationalId || '',
+        complaint.passportNumber || '',
+        complaint.priority || '',
+        complaint.status || '',
+      ]
+      csvRows.push(row.join(','))
+    })
+
+    const csvContent = csvRows.join('\n')
+    const timestamp = DateTime.now().toFormat('yyyy-MM-dd_HH-mm-ss')
+    const filename = `complaints_${timestamp}.csv`
+
+    response.header('Content-Type', 'text/csv')
+    response.header('Content-Disposition', `attachment; filename="${filename}"`)
+    return response.send(csvContent)
   }
 }
