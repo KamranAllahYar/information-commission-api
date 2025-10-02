@@ -30,7 +30,7 @@ export const generateToken = ({
 
 export const getMediaUrl = (path: string | null | undefined): string => {
   if (path) {
-    return env.get('APP_URL') + `/storage${path}`
+    return env.get('APP_URL') + `/storage/${path}`
   }
   return ''
 }

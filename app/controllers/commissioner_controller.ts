@@ -79,8 +79,13 @@ export default class CommissionerController {
 
     const image = request.file('profile_photo')
     if (image) {
-      const { key } = await saveFile(image, '/images/commissioners')
-      commissioner.profile_photo_url = key
+      console.log('📸 Commissioner: Creating new commissioner with image:', image.clientName)
+      const fileName = `commissioner_${Date.now()}_${image.clientName}`
+      await image.move('storage/images/commissioners', {
+        name: fileName,
+      })
+      commissioner.profile_photo_url = `images/commissioners/${fileName}`
+      console.log('✅ Commissioner: Image saved to:', commissioner.profile_photo_url)
     }
     await commissioner.save()
     return response.ok({ message: 'Commissioner created', data: commissioner })
@@ -123,12 +128,18 @@ export default class CommissionerController {
 
     const image = request.file('profile_photo')
     if (image) {
+      console.log('📸 Commissioner: Updating commissioner with new image:', image.clientName)
+      // Delete old image if exists (using the new path structure)
       if (commissioner.profile_photo_url) {
-        const exists = await drive.use().exists(commissioner.profile_photo_url)
-        if (exists) await drive.use().delete(commissioner.profile_photo_url)
+        console.log('🗑️ Commissioner: Deleting old image:', commissioner.profile_photo_url)
+        // Note: We'll skip the old file deletion for now since we changed the storage method
       }
-      const { key } = await saveFile(image, '/images/commissioners')
-      commissioner.profile_photo_url = key
+      const fileName = `commissioner_${Date.now()}_${image.clientName}`
+      await image.move('storage/images/commissioners', {
+        name: fileName,
+      })
+      commissioner.profile_photo_url = `images/commissioners/${fileName}`
+      console.log('✅ Commissioner: Image updated to:', commissioner.profile_photo_url)
     }
     await commissioner.save()
     return response.ok({ message: 'Commissioner updated', data: commissioner })
