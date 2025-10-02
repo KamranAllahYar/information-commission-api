@@ -10,7 +10,7 @@ export const createCommissionerValidator = vine.compile(
     biography: vine.string().optional().nullable(),
     qualifications: vine.string().optional().nullable(),
     experience: vine.string().optional().nullable(),
-    appointment_date: vine.string(),
+    appointed_date: vine.string(),
     term_end_date: vine.string(),
     status: vine.enum(['active', 'inactive']).optional(),
   })
@@ -25,7 +25,7 @@ export const updateCommissionerValidator = vine.compile(
     biography: vine.string().optional().nullable(),
     qualifications: vine.string().optional().nullable(),
     experience: vine.string().optional().nullable(),
-    appointment_date: vine.string().optional(),
+    appointed_date: vine.string().optional(),
     term_end_date: vine.string().optional(),
     status: vine.enum(['active', 'inactive']).optional(),
   })

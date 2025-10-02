@@ -21,6 +21,7 @@ import '#start/api/complaints'
 import '#start/api/requests'
 import '#start/api/resources'
 import '#start/api/news'
+import '#start/api/faqs'
 import '#start/api/dashboard'
 
 router.get('/', async () => {

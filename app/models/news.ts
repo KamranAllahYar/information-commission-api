@@ -10,6 +10,16 @@ export default class News extends BaseModel {
   @column()
   declare uuid: string
 
+  @column()
+  declare sampleID: string
+
+  @beforeCreate()
+  static async assignSampleID(model: News) {
+    const lastNews = await News.query().orderBy('id', 'desc').first()
+    const nextId = lastNews ? lastNews.id + 1 : 1
+    model.sampleID = `ARTICLE-${nextId}`
+  }
+
   @beforeCreate()
   static assignUuid(model: News) {
     model.uuid = randomUUID()
