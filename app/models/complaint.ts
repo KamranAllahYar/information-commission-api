@@ -13,6 +13,16 @@ export default class Complaint extends BaseModel {
   @column()
   declare uuid: string
 
+  @column()
+  declare sampleID: string
+
+  @beforeCreate()
+  static async assignSampleID(model: Complaint) {
+    const lastComplaint = await Complaint.query().orderBy('id', 'desc').first()
+    const nextId = lastComplaint ? lastComplaint.id + 1 : 1
+    model.sampleID = `COMP-${nextId}`
+  }
+
   @beforeCreate()
   static assignUuid(model: Complaint) {
     model.uuid = randomUUID()

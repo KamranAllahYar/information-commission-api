@@ -10,6 +10,15 @@ export default class Resource extends BaseModel {
   @column()
   declare uuid: string
 
+  @column()
+  declare sampleID: string
+
+  static async assignSampleID(model: Resource) {
+    const lastResource = await Resource.query().orderBy('id', 'desc').first()
+    const nextId = lastResource ? lastResource.id + 1 : 1
+    model.sampleID = `RES-${nextId}`
+  }
+
   @beforeCreate()
   static assignUuid(model: Resource) {
     model.uuid = randomUUID()

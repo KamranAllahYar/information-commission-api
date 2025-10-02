@@ -1,4 +1,4 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
 import Commissioner from '#models/commissioner'
 import drive from '@adonisjs/drive/services/main'
 import { saveFile } from '#lib/helpers'
@@ -8,70 +8,51 @@ import { createCommissionerValidator, updateCommissionerValidator } from '#valid
 
 export default class CommissionerController {
   async index({ request }: HttpContext) {
-    const page = request.input('page', 1)
-    const pageSize = request.input('page_size', 10)
-    const search = request.input('search')
     const query = Commissioner.query()
-      .select([
-        'id',
-        'uuid',
-        'full_name',
-        'title',
-        'email',
-        'phone',
-        'biography',
-        'qualifications',
-        'experience',
-        'profile_photo_url',
-        'appointment_date',
-        'term_end_date',
-        'status',
-        'created_at',
-      ])
-      .if(search, (q) => {
-        q.where((qb) => {
-          qb.where('full_name', 'LIKE', `%${search}%`)
-            .orWhere('email', 'LIKE', `%${search}%`)
-            .orWhere('title', 'LIKE', `%${search}%`)
-        })
-      })
+
+    // Sorting functionality
+    if (request.input('sort_column') && request.input('sort_order')) {
+      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    } else {
+      // Default sorting: newest first
+      query.orderBy('created_at', 'desc')
+    }
+
+    // Filtering
     if (request.input('status')) {
       query.where('status', request.input('status'))
     }
-    if (request.input('sort_column') && request.input('sort_order')) {
-      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    if (request.input('search')) {
+      query.where('full_name', 'like', `%${request.input('search')}%`)
+      query.orWhere('email', 'like', `%${request.input('search')}%`)
+      query.orWhere('title', 'like', `%${request.input('search')}%`)
     }
-    const paginator = await query.paginate(page, pageSize)
-    const json = paginator.toJSON()
 
-    // Counts for dashboard/meta
-    const [
-      totalCount,
-      activeCount,
-      inactiveCount,
-    ] = await Promise.all([
-      Commissioner.query().count('* as total').then((r) => Number(r[0].$extras.total)),
-      Commissioner.query().where('status', 'active').count('* as total').then((r) => Number(r[0].$extras.total)),
-      Commissioner.query().where('status', 'inactive').count('* as total').then((r) => Number(r[0].$extras.total)),
-    ])
+    const commissioners: any = await query.paginate(
+      request.input('page', 1),
+      request.input('page_size', 10)
+    )
+
+    const { meta, data } = commissioners.toJSON()
+
+    // stats queries
+    const total = await Commissioner.query().count('* as total').first()
+    const active = await Commissioner.query().where('status', 'active').count('* as total').first()
+    const inactive = await Commissioner.query()
+      .where('status', 'inactive')
+      .count('* as total')
+      .first()
 
     return {
-      meta: {
-        total: json.meta.total,
-        per_page: json.meta.perPage,
-        current_page: json.meta.currentPage,
-        last_page: json.meta.lastPage,
-        first_page: 1,
-        first_page_url: `/?page=1`,
-        last_page_url: `/?page=${json.meta.lastPage}`,
-        next_page_url: json.meta.nextPage ? `/?page=${json.meta.nextPage}` : null,
-        previous_page_url: json.meta.prevPage ? `/?page=${json.meta.prevPage}` : null,
-        // Additional counts
-        total_commissioners: totalCount,
-        active_commissioners: activeCount,
-        inactive_commissioners: inactiveCount,
+      meta,
+      data: {
+        stats: {
+          total: total?.$extras.total || 0,
+          active: active?.$extras.total || 0,
+          inactive: inactive?.$extras.total || 0,
+        },
+        data,
       },
-      data: json.data,
     }
   }
 
@@ -91,7 +72,7 @@ export default class CommissionerController {
       biography: payload.biography ?? null,
       qualifications: payload.qualifications?.trim() || null,
       experience: payload.experience?.trim() || null,
-      appointment_date: DateTime.fromISO(payload.appointment_date),
+      appointed_date: DateTime.fromISO(payload.appointed_date),
       term_end_date: DateTime.fromISO(payload.term_end_date),
       status: (payload.status as 'active' | 'inactive') || 'active',
     })
@@ -102,7 +83,7 @@ export default class CommissionerController {
       commissioner.profile_photo_url = key
     }
     await commissioner.save()
-    return { message: 'Commissioner created', data: commissioner }
+    return response.ok({ message: 'Commissioner created', data: commissioner })
   }
 
   async show({ request, response }: HttpContext) {
@@ -133,12 +114,10 @@ export default class CommissionerController {
       ...(payload.experience !== undefined
         ? { experience: payload.experience?.trim() || null }
         : {}),
-      ...(payload.appointment_date
-        ? { appointment_date: DateTime.fromISO(payload.appointment_date) }
+      ...(payload.appointed_date
+        ? { appointed_date: DateTime.fromISO(payload.appointed_date) }
         : {}),
-      ...(payload.term_end_date
-        ? { term_end_date: DateTime.fromISO(payload.term_end_date) }
-        : {}),
+      ...(payload.term_end_date ? { term_end_date: DateTime.fromISO(payload.term_end_date) } : {}),
       ...(payload.status ? { status: payload.status as 'active' | 'inactive' } : {}),
     })
 
@@ -152,7 +131,7 @@ export default class CommissionerController {
       commissioner.profile_photo_url = key
     }
     await commissioner.save()
-    return { message: 'Commissioner updated', data: commissioner }
+    return response.ok({ message: 'Commissioner updated', data: commissioner })
   }
 
   async destroy({ request, response }: HttpContext) {
@@ -166,6 +145,6 @@ export default class CommissionerController {
       if (exists) await drive.use().delete(commissioner.profile_photo_url)
     }
     await commissioner.delete()
-    return { message: 'Commissioner Deleted' }
+    return response.ok({ message: 'Commissioner Deleted' })
   }
 }

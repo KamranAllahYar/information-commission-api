@@ -1,4 +1,4 @@
-import type { HttpContext } from '@adonisjs/core/http'
+import { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import Request from '#models/request'
 import Complaint from '#models/complaint'
@@ -43,7 +43,11 @@ function percentageChange(current: number, previous: number) {
   return Number((((current - previous) / previous) * 100).toFixed(2))
 }
 
-async function countBetween(model: typeof Request | typeof Complaint | typeof Resource, start: DateTime, end: DateTime) {
+async function countBetween(
+  model: typeof Request | typeof Complaint | typeof Resource,
+  start: DateTime,
+  end: DateTime
+) {
   const row = await model
     .query()
     .whereBetween('created_at', [start.toSQL()!, end.toSQL()!])
@@ -57,7 +61,7 @@ async function seriesByDay(table: string, start: DateTime, end: DateTime) {
     .from(table)
     .select(db.raw('DATE(`created_at`) as d'))
     .select(db.raw('COUNT(*) as c'))
-    .whereBetween('created_at', [start.toSQLDate(), end.toSQLDate()])
+    .whereBetween('created_at', [start.toSQLDate()!, end.toSQLDate()!])
     .groupBy('d')
     .orderBy('d', 'asc')
 
@@ -66,7 +70,11 @@ async function seriesByDay(table: string, start: DateTime, end: DateTime) {
     map.set(r.d, Number(r.c))
   }
   const days: Array<{ date: string; count: number }> = []
-  for (let cursor = start.startOf('day'); cursor <= end.endOf('day'); cursor = cursor.plus({ days: 1 })) {
+  for (
+    let cursor = start.startOf('day');
+    cursor <= end.endOf('day');
+    cursor = cursor.plus({ days: 1 })
+  ) {
     const key = cursor.toISODate()!
     days.push({ date: key, count: map.get(key) || 0 })
   }
@@ -79,7 +87,11 @@ export default class DashboardController {
     const start = request.input('start') as string | undefined
     const end = request.input('end') as string | undefined
 
-    const { period, rangeStart, rangeEnd, prevStart, prevEnd } = normalizeRange(periodParam, start, end)
+    const { period, rangeStart, rangeEnd, prevStart, prevEnd } = normalizeRange(
+      periodParam,
+      start,
+      end
+    )
 
     // Current counts
     const [requestsNow, complaintsNow, documentsNow] = await Promise.all([
@@ -135,5 +147,3 @@ export default class DashboardController {
     }
   }
 }
-
-

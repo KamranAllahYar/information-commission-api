@@ -7,7 +7,8 @@ export default class Complaints extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('uuid', 36).notNullable().unique()
-      // Complaint Details
+      table.string('sample_id').nullable().unique()
+
       table
         .enum('type', [
           'Refusal to Domain Information',
