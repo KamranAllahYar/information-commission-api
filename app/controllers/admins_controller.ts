@@ -40,7 +40,7 @@ export default class AdminsController {
 
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createAdminValidator)
-
+    console.log("admin created")
     const existing = await User.findBy('email', payload.email.toLowerCase())
     if (existing) {
       return response.conflict({
