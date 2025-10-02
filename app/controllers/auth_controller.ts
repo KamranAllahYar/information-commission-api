@@ -57,6 +57,13 @@ export default class AuthController {
       })
     }
 
+    // Check if admin is active
+    if (!user.is_active) {
+      return response.forbidden({
+        message: 'Your account has been deactivated. Please contact the system administrator for assistance.',
+      })
+    }
+
     let isValid = false
 
     // ✅ First try with default (scrypt)

@@ -7,6 +7,10 @@ export const createAdminValidator = vine.compile(
     full_name: vine.string().trim(),
     role: vine.enum(['super_admin', 'admin', 'editor', 'viewer'] as const),
     is_active: vine.boolean(),
+    image: vine.file({
+      size: '2mb',
+      extnames: ['jpg', 'jpeg', 'png', 'gif']
+    }).optional()
   })
 )
 
@@ -17,5 +21,9 @@ export const updateAdminValidator = vine.compile(
     full_name: vine.string().trim().optional(),
     role: vine.enum(['super_admin', 'admin', 'editor', 'viewer'] as const).optional(),
     is_active: vine.boolean().optional(),
+    image: vine.file({
+      size: '2mb',
+      extnames: ['jpg', 'jpeg', 'png', 'gif']
+    }).optional()
   })
 )
