@@ -40,7 +40,7 @@ export default class AdminsController {
 
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createAdminValidator)
-
+    console.log('admin created')
     const existing = await User.findBy('email', payload.email.toLowerCase())
     if (existing) {
       return response.conflict({
@@ -58,6 +58,16 @@ export default class AdminsController {
       is_admin: true,
       verified_at: DateTime.now(),
     })
+
+    // Handle image upload
+    if (payload.image) {
+      const fileName = `admin_${Date.now()}_${payload.image.clientName}`
+      await payload.image.move('storage/images/admin', {
+        name: fileName,
+      })
+      user.image_url = `images/admin/${fileName}`
+    }
+
     await user.save()
 
     return response.created({
@@ -103,6 +113,15 @@ export default class AdminsController {
     if (payload.full_name !== undefined) user.full_name = payload.full_name
     if (payload.role !== undefined) user.role = payload.role
     if (payload.is_active !== undefined) user.is_active = payload.is_active
+
+    // Handle image upload
+    if (payload.image) {
+      const fileName = `admin_${Date.now()}_${payload.image.clientName}`
+      await payload.image.move('storage/images/admin', {
+        name: fileName,
+      })
+      user.image_url = `images/admin/${fileName}`
+    }
 
     await user.save()
     return { message: 'Admin updated', data: user }

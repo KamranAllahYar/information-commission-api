@@ -64,11 +64,18 @@ export default class SettingsController {
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createSettingValidator)
     let setting = await Setting.query().where('key', payload.key).first()
+
+    // Convert boolean to string for database storage
+    const valueAsString = typeof payload.value === 'boolean' ? payload.value.toString() : payload.value
+
     if (setting) {
-      setting.value = payload.value
+      setting.value = valueAsString
     } else {
       setting = new Setting()
-      setting.merge(payload)
+      setting.merge({
+        key: payload.key,
+        value: valueAsString
+      })
     }
     await setting.save()
     return response.created({
@@ -88,7 +95,14 @@ export default class SettingsController {
         message: `Setting not found`,
       })
     }
-    setting.merge(payload)
+
+    // Convert boolean to string for database storage
+    const updateData = {
+      ...(payload.key && { key: payload.key }),
+      value: typeof payload.value === 'boolean' ? payload.value.toString() : payload.value
+    }
+
+    setting.merge(updateData)
     await setting.save()
     return {
       message: 'Setting updated',
