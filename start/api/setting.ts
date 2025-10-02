@@ -20,4 +20,4 @@ router
   })
   .prefix('api/settings')
   .use(middleware.auth())
-  .use(middleware.acl({ roles: ['super-admin', 'admin'] }))
+  .use(middleware.is_admin())
