@@ -33,6 +33,9 @@ export default class Resource extends BaseModel {
   @column()
   declare file: string
 
+  @column()
+  declare url: string | null
+
   @computed()
   get file_url() {
     return getMediaUrl(this.file)

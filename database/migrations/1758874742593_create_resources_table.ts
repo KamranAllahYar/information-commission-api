@@ -15,6 +15,7 @@ export default class extends BaseSchema {
       table.enum('status', ['draft', 'published']).notNullable()
       table.enum('type', ['laws_regulations', 'guides_manuals', 'video_resources']).notNullable()
       table.string('file').notNullable()
+      table.string('url').nullable().defaultTo(null)
       table.string('mime').notNullable()
       table.string('size').notNullable()
       table.integer('download').defaultTo(0)

@@ -88,7 +88,7 @@ export default class ResourcesController {
 
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createResourceValidator)
-    const { title, description, type, category, status } = payload
+    const { title, description, type, category, status, url } = payload
     const file = request.file('file', {
       size: '10mb',
     })
@@ -104,6 +104,7 @@ export default class ResourcesController {
       category,
       status,
       type,
+      url: url ? url : null,
       file: media.path,
       size: media.size,
       mime: media.mime,
@@ -121,7 +122,7 @@ export default class ResourcesController {
       })
     }
     const payload = await request.validateUsing(updateResourceValidator)
-    const { title, description, category, type, status } = payload
+    const { title, description, category, type, status, url } = payload
     const file = request.file('file', {
       size: '10mb',
     })
@@ -142,6 +143,7 @@ export default class ResourcesController {
       title,
       description,
       type,
+      url: url ? url : null,
       category,
       status,
     })
