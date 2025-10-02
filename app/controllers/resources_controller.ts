@@ -58,6 +58,24 @@ export default class ResourcesController {
     }
   }
 
+  async public({ request }: HttpContext) {
+    const query = Resource.query().where('status', 'published')
+    if (request.input('sort_column') && request.input('sort_order')) {
+      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    }
+    if (request.input('category')) {
+      query.where('category', request.input('category'))
+    }
+    if (request.input('type')) {
+      query.where('type', request.input('type'))
+    }
+    if (request.input('search')) {
+      query.where('title', 'like', `%${request.input('search')}%`)
+      query.orWhere('description', 'like', `%${request.input('search')}%`)
+    }
+
+    return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+  }
   async show({ request, response }: HttpContext) {
     const resource = await Resource.query().where('uuid', request.param('id')).first()
     if (!resource) {
