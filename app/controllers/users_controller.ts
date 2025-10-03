@@ -22,26 +22,13 @@ export default class UsersController {
     if (search) {
     }
     const query = User.query()
-      .select([
-        'id',
-        'uuid',
-        'email',
-        'full_name',
-        'phone',
-        // 'civil_number',
-        // 'passport_number',
-        'image_url',
-        'verified_at',
-      ])
+      .select(['id', 'uuid', 'email', 'full_name', 'image_url', 'verified_at'])
       .preload('user_roles')
       .if(search, (q) => {
         q.where((searchQuery) => {
           searchQuery
             .where('email', 'LIKE', `%${search}%`)
-            // .orWhere('civil_number', 'LIKE', `%${search}%`)
-            .orWhere('phone', 'LIKE', `%${search}%`)
-            // .orWhere('passport_number', 'LIKE', `%${search}%`)
-            .orWhere('address', 'LIKE', `%${search}%`)
+            .orWhere('full_name', 'LIKE', `%${search}%`)
             .orWhereHas('user_roles', (roleQuery: any) => {
               roleQuery.where('title', 'LIKE', `%${search}%`)
             })
@@ -83,27 +70,6 @@ export default class UsersController {
         message: 'This email is already in use',
       })
     }
-
-    // if (payload.user.passport_number) {
-    //   existingUser = await User.findBy('passport_number', payload.user.passport_number)
-    //   if (existingUser) {
-    //     return response.conflict({
-    //       error_code: HttpStatusMessages.ALREADY_EXISTS,
-    //       message: 'This passport number is already in use',
-    //     })
-    //   }
-    // }
-
-    /*  if (payload.user.civil_number) {
-      /*
-      existingUser = await User.findBy('civil_number', payload.user.civil_number)
-      if (existingUser) {
-        return response.conflict({
-          error_code: HttpStatusMessages.ALREADY_EXISTS,
-          message: 'This civil number is already in use',
-        })
-      }
-    } */
 
     let role = null
     if (payload.role_id) {
