@@ -66,7 +66,8 @@ export default class SettingsController {
     let setting = await Setting.query().where('key', payload.key).first()
 
     // Convert boolean to string for database storage
-    const valueAsString = typeof payload.value === 'boolean' ? payload.value.toString() : payload.value
+    const valueAsString =
+      typeof payload.value === 'boolean' ? payload.value.toString() : payload.value
 
     if (setting) {
       setting.value = valueAsString
@@ -74,7 +75,7 @@ export default class SettingsController {
       setting = new Setting()
       setting.merge({
         key: payload.key,
-        value: valueAsString
+        value: valueAsString,
       })
     }
     await setting.save()
@@ -99,7 +100,7 @@ export default class SettingsController {
     // Convert boolean to string for database storage
     const updateData = {
       ...(payload.key && { key: payload.key }),
-      value: typeof payload.value === 'boolean' ? payload.value.toString() : payload.value
+      value: typeof payload.value === 'boolean' ? payload.value.toString() : payload.value,
     }
 
     setting.merge(updateData)

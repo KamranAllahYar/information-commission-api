@@ -21,8 +21,8 @@ export default class extends BaseSchema {
       table.string('size').notNullable()
       table.integer('download').defaultTo(0)
 
-      table.timestamp('created_at').notNullable()
-      table.timestamp('updated_at').notNullable()
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 

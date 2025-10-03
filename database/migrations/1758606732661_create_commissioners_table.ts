@@ -19,8 +19,8 @@ export default class Commissioners extends BaseSchema {
       table.date('appointed_date').notNullable()
       table.date('term_end_date').notNullable()
       table.enum('status', ['active', 'inactive']).defaultTo('active')
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 
