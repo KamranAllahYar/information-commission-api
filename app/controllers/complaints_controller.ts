@@ -29,15 +29,32 @@ export default class ComplaintsController {
     if (request.input('priority')) {
       query.where('priority', request.input('priority'))
     }
-    if (request.input('category')) {
-      query.where('category', request.input('category'))
+    if (request.input('type')) {
+      query.where('type', request.input('type'))
     }
     if (request.input('search')) {
-      query.where('full_name', 'like', `%${request.input('search')}%`)
-      query.orWhere('email', 'like', `%${request.input('search')}%`)
-      query.orWhere('address', 'like', `%${request.input('search')}%`)
-      query.orWhere('national_id', 'like', `%${request.input('search')}%`)
-      query.orWhere('passport_number', 'like', `%${request.input('search')}%`)
+      const searchTerm = request.input('search')
+      query.where((subQuery) => {
+        subQuery
+          .where('full_name', 'like', `%${searchTerm}%`)
+          .orWhere('email', 'like', `%${searchTerm}%`)
+          .orWhere('address', 'like', `%${searchTerm}%`)
+          .orWhere('national_id', 'like', `%${searchTerm}%`)
+          .orWhere('passport_number', 'like', `%${searchTerm}%`)
+          .orWhere('type', 'like', `%${searchTerm}%`)
+          .orWhere('sample_id', 'like', `%${searchTerm}%`)
+
+        // Handle COMP- prefix and numeric searches
+        if (searchTerm.toLowerCase().startsWith('comp-')) {
+          const numericPart = searchTerm.substring(5) // Remove "comp-" prefix
+          if (!isNaN(Number(numericPart))) {
+            subQuery.orWhereRaw(`CAST(SUBSTRING(sample_id, 6) AS UNSIGNED) = ?`, [Number(numericPart)])
+          }
+        } else if (!isNaN(Number(searchTerm))) {
+          // If search term is purely numeric, search by numeric part of sample_id
+          subQuery.orWhereRaw(`CAST(SUBSTRING(sample_id, 6) AS UNSIGNED) = ?`, [Number(searchTerm)])
+        }
+      })
     }
 
     const complaints: any = await query.paginate(

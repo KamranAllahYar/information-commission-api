@@ -30,6 +30,9 @@ export default class RequestsController {
       query.where('name_of_applicant', 'like', `%${request.input('search')}%`)
       query.orWhere('email', 'like', `%${request.input('search')}%`)
       query.orWhere('address', 'like', `%${request.input('search')}%`)
+      query.orWhere('id', 'like', `%${request.input('search')}%`)
+      // Also search for REQ-X format
+      query.orWhereRaw('CONCAT("REQ-", id) LIKE ?', [`%${request.input('search')}%`])
     }
 
     const requests: any = await query.paginate(
