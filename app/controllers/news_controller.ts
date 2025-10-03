@@ -21,7 +21,19 @@ export default class NewsController {
       query.where('category', request.input('category'))
     }
     if (request.input('search')) {
-      query.where('title', 'like', `%${request.input('search')}%`)
+      const raw = String(request.input('search') || '').trim()
+      // Match formats: "NEWS-7", "news 7", or plain numeric "7"
+      const newsIdMatch = raw.match(/^news[-\s]?(\d+)$/i)
+      const numericOnlyMatch = raw.match(/^\d+$/)
+      if (newsIdMatch) {
+        const id = Number(newsIdMatch[1])
+        if (!Number.isNaN(id)) query.where('id', id)
+      } else if (numericOnlyMatch) {
+        const id = Number(raw)
+        if (!Number.isNaN(id)) query.where('id', id)
+      } else {
+        query.where('title', 'like', `%${raw}%`)
+      }
     }
 
     const news: any = await query.paginate(request.input('page', 1), request.input('page_size', 10))
@@ -112,6 +124,7 @@ export default class NewsController {
       })
     }
     if (status === 'published') {
+      const explicitPublishedAt = request.input('published_at')
       const news = await News.create({
         title,
         excerpt,
@@ -120,7 +133,7 @@ export default class NewsController {
         category,
         status,
         featured,
-        published_at: DateTime.now(),
+        published_at: explicitPublishedAt ? DateTime.fromISO(explicitPublishedAt) : DateTime.now(),
       })
       return response.ok({
         message: 'News created successfully',
@@ -167,6 +180,7 @@ export default class NewsController {
       })
     }
     if (status === 'published') {
+      const explicitPublishedAt = request.input('published_at')
       news.merge({
         title,
         excerpt,
@@ -175,7 +189,7 @@ export default class NewsController {
         category,
         status,
         featured,
-        published_at: DateTime.now(),
+        published_at: explicitPublishedAt ? DateTime.fromISO(explicitPublishedAt) : DateTime.now(),
       })
     }
     await news.save()
