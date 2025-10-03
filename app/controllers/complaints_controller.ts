@@ -72,7 +72,6 @@ export default class ComplaintsController {
 
   // Create complaint (user side)
   async store({ request, response }: HttpContext) {
-    console.log('store')
     const payload = await request.validateUsing(createComplaintValidator)
 
     const complaint = new Complaint()
