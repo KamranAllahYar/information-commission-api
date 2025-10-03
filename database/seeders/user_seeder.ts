@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker'
 import { Role } from '@holoyan/adonisjs-permissions'
 export default class UserSeeder extends BaseSeeder {
   public async run() {
-    const superAdminRole = await Role.findBy('slug', 'super_admin')
+    const superAdminRole = await Role.findBy('slug', 'super-admin')
     if (!superAdminRole) {
       console.log('superAdminRole not found. Please run the role seeder first.')
       return
@@ -23,7 +23,6 @@ export default class UserSeeder extends BaseSeeder {
         full_name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
         password: 'password123',
-        role: 'admin' as 'admin',
         is_active: true,
       }))
     )
