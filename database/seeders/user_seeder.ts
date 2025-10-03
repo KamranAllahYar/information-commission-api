@@ -13,8 +13,6 @@ export default class UserSeeder extends BaseSeeder {
       full_name: 'Super Admin',
       email: 'superadmin@admin.com',
       password: 'admin##123',
-      role: 'super_admin',
-      is_admin: true,
       is_active: true,
     })
 
@@ -26,7 +24,6 @@ export default class UserSeeder extends BaseSeeder {
         email: faker.internet.email().toLowerCase(),
         password: 'password123',
         role: 'admin' as 'admin',
-        is_admin: true,
         is_active: true,
       }))
     )

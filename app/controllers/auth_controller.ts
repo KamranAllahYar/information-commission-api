@@ -149,7 +149,6 @@ export default class AuthController {
       ...payload.user,
       otp,
       otp_expiry: DateTime.now().plus({ minute: 10 }),
-      is_admin: payload.user.is_admin ?? false,
     })
     await user.save()
 

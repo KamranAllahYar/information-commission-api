@@ -14,10 +14,11 @@ router
 
 router
   .group(() => {
-    router.post('/', [ResourceController, 'store']).use(middleware.is_admin())
-    router.put('/:id/status', [ResourceController, 'updateStatus']).use(middleware.is_admin())
-    router.put('/:id', [ResourceController, 'update']).use(middleware.is_admin())
-    router.delete('/:id', [ResourceController, 'destroy']).use(middleware.is_admin())
+    router.post('/', [ResourceController, 'store'])
+    router.put('/:id/status', [ResourceController, 'updateStatus'])
+    router.put('/:id', [ResourceController, 'update'])
+    router.delete('/:id', [ResourceController, 'destroy'])
   })
   .prefix('api/resources')
   .use(middleware.auth())
+  .use(middleware.acl({ roles: ['super-admin'] }))

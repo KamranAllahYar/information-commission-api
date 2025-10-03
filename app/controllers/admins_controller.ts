@@ -9,7 +9,6 @@ export default class AdminsController {
     const search = request.input('search')
 
     const query = User.query()
-      .where('is_admin', true)
       .select([
         'id',
         'uuid',
@@ -18,7 +17,6 @@ export default class AdminsController {
         'image_url',
         'verified_at',
         'is_active',
-        'role',
         'last_login_at',
         'created_at',
       ])
@@ -27,7 +25,6 @@ export default class AdminsController {
           searchQuery
             .where('email', 'LIKE', `%${search}%`)
             .orWhere('full_name', 'LIKE', `%${search}%`)
-            .orWhere('role', 'LIKE', `%${search}%`)
         })
       })
 
@@ -40,7 +37,6 @@ export default class AdminsController {
 
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createAdminValidator)
-    console.log('admin created')
     const existing = await User.findBy('email', payload.email.toLowerCase())
     if (existing) {
       return response.conflict({
@@ -53,9 +49,7 @@ export default class AdminsController {
       email: payload.email.toLowerCase(),
       password: payload.password,
       full_name: payload.full_name,
-      role: payload.role,
       is_active: payload.is_active,
-      is_admin: true,
       verified_at: DateTime.now(),
     })
 
@@ -77,10 +71,7 @@ export default class AdminsController {
   }
 
   async show({ request, response }: HttpContext) {
-    const user = await User.query()
-      .where('uuid', request.param('id'))
-      .where('is_admin', true)
-      .first()
+    const user = await User.query().where('uuid', request.param('id')).first()
     if (!user) {
       return response.notFound({ message: 'Admin not found' })
     }
@@ -89,10 +80,7 @@ export default class AdminsController {
 
   async update({ request, response }: HttpContext) {
     const payload = await request.validateUsing(updateAdminValidator)
-    const user = await User.query()
-      .where('uuid', request.param('id'))
-      .where('is_admin', true)
-      .first()
+    const user = await User.query().where('uuid', request.param('id')).first()
     if (!user) {
       return response.notFound({ message: 'Admin not found' })
     }
@@ -111,7 +99,6 @@ export default class AdminsController {
     }
 
     if (payload.full_name !== undefined) user.full_name = payload.full_name
-    if (payload.role !== undefined) user.role = payload.role
     if (payload.is_active !== undefined) user.is_active = payload.is_active
 
     // Handle image upload
@@ -128,10 +115,7 @@ export default class AdminsController {
   }
 
   async destroy({ request, response }: HttpContext) {
-    const user = await User.query()
-      .where('uuid', request.param('id'))
-      .where('is_admin', true)
-      .first()
+    const user = await User.query().where('uuid', request.param('id')).first()
     if (!user) {
       return response.notFound({ message: 'Admin not found' })
     }

@@ -18,4 +18,4 @@ router
   })
   .prefix('api/commissioners')
   .use(middleware.auth())
-  .use(middleware.is_admin())
+  .use(middleware.acl({ roles: ['super-admin'] }))

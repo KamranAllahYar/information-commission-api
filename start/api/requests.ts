@@ -9,8 +9,10 @@ router.get('/:id', [RequestsController, 'show']).prefix('api/requests').use(midd
 
 router
   .group(() => {
-    router.get('/', [RequestsController, 'index']).use(middleware.is_admin()) // get all
-    router.get('/export/csv', [RequestsController, 'exportCsv']).use(middleware.is_admin()) // export CSV
+    router.get('/', [RequestsController, 'index']).use(middleware.acl({ roles: ['super-admin'] })) // get all
+    router
+      .get('/export/csv', [RequestsController, 'exportCsv'])
+      .use(middleware.acl({ roles: ['super-admin'] })) // export CSV
     router.put('/:id', [RequestsController, 'update']) // update
     router.delete('/:id', [RequestsController, 'destroy']) // delete
   })

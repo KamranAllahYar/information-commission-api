@@ -6,7 +6,7 @@ export default class RoleSeeder extends BaseSeeder {
     // Create roles
     const superAdminRole = await Role.create({
       title: 'Super Admin',
-      slug: 'super_admin',
+      slug: 'super-admin',
     })
     const adminRole = await Role.create({
       title: 'Admin',

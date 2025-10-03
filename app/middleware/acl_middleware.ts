@@ -30,6 +30,7 @@ export default class AclMiddleware {
 
     if (options.roles) {
       const hasRoles = await ctx.auth.user!.hasAnyRole(...options.roles)
+      console.log(hasRoles)
       if (!hasRoles) {
         ctx.response.abort(
           { message: `Only ${joinArrayWithCommasAnd(options.roles)} can access this resource` },

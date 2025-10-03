@@ -1,7 +1,9 @@
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
-import DashboardController from '#controllers/dashboard_controller'
+const DashboardController = () => import('#controllers/dashboard_controller')
 
-router.get('/', [DashboardController, 'index']).prefix('api/dashboard').use(middleware.auth()).use(middleware.is_admin())
-
-
+router
+  .get('/', [DashboardController, 'index'])
+  .prefix('api/dashboard')
+  .use(middleware.auth())
+  .use(middleware.acl({ roles: ['super-admin'] }))
