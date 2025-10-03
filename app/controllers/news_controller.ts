@@ -124,7 +124,7 @@ export default class NewsController {
       })
     }
     if (status === 'published') {
-      const explicitPublishedAt = request.input('published_at')
+      const explicitPublishedAt = request.input('published_at') || request.input('publishDate')
       const news = await News.create({
         title,
         excerpt,
@@ -180,7 +180,7 @@ export default class NewsController {
       })
     }
     if (status === 'published') {
-      const explicitPublishedAt = request.input('published_at')
+      const explicitPublishedAt = request.input('published_at') || request.input('publishDate')
       news.merge({
         title,
         excerpt,
