@@ -16,7 +16,7 @@ export const createComplaintValidator = vine.compile(
 
     // Contact Information
     full_name: vine.string(),
-    email: vine.string().email(),
+    email: vine.string().email().optional(),
     phone: vine.string().optional().nullable(),
     address: vine.string().optional().nullable(),
     national_id: vine.string().optional().nullable(),

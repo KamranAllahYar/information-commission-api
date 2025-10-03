@@ -6,6 +6,8 @@ const ResourceController = () => import('#controllers/resources_controller')
 router
   .group(() => {
     router.get('/', [ResourceController, 'index'])
+    router.get('/public', [ResourceController, 'public'])
+    router.get('/:id/download', [ResourceController, 'downloadFile'])
     router.get('/:id', [ResourceController, 'show'])
   })
   .prefix('api/resources')
@@ -19,5 +21,3 @@ router
   })
   .prefix('api/resources')
   .use(middleware.auth())
-
-router.get('/:id/download', [ResourceController, 'downloadFile']).prefix('api/resources')

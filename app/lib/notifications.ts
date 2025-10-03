@@ -31,7 +31,7 @@ export const staffProfileApproved = {
     body: 'Your staff profile has been successfully approved.',
   },
   data: {
-    link: `${env.get('WEB_URL')}/dashboard/manage-staff`,
+    link: `${env.get('ADMIN_URL')}/dashboard/manage-staff`,
   },
 }
 
@@ -41,7 +41,7 @@ export const staffProfileRejected = {
     body: 'Your staff profile has been rejected. Please review and resubmit.',
   },
   data: {
-    link: `${env.get('WEB_URL')}/dashboard/manage-staff`,
+    link: `${env.get('ADMIN_URL')}/dashboard/manage-staff`,
   },
 }
 

@@ -32,8 +32,8 @@ export default class Users extends BaseSchema {
 
       table.timestamp('last_login_at', { useTz: true }).nullable()
 
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
+      table.timestamp('created_at', { useTz: true }).nullable()
+      table.timestamp('updated_at', { useTz: true }).nullable()
     })
   }
 

@@ -48,6 +48,13 @@ export const getWebUrl = (path: string | null | undefined): string => {
   return ''
 }
 
+export const getAdminUrl = (path: string | null | undefined): string => {
+  if (path) {
+    return env.get('ADMIN_URL') + `${path}`
+  }
+  return ''
+}
+
 // Add this helper function inside HcpController or as a utility
 export const fetchWithRetry = async <T>(
   fn: () => Promise<T>,

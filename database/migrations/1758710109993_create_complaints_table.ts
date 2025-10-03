@@ -34,7 +34,8 @@ export default class Complaints extends BaseSchema {
       table.enum('priority', ['High', 'Medium', 'Low']).defaultTo('Low')
       table.enum('status', ['Open', 'Investigating', 'Resolved']).defaultTo('Open')
 
-      table.timestamps(true)
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 

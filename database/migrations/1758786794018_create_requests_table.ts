@@ -35,7 +35,8 @@ export default class Requests extends BaseSchema {
       table.date('date_of_receipt').nullable()
 
       // timestamps
-      table.timestamps(true)
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 

@@ -30,11 +30,11 @@ router
   })
   .prefix('api/users')
   .use(middleware.auth())
-  .use(
-    middleware.acl({
-      roles: ['admin', 'super-admin'],
-    })
-  )
+// .use(
+//   middleware.acl({
+//     roles: ['admin', 'super-admin'],
+//   })
+// )
 
 router
   .get('/', [UsersController, 'existingUsers'])

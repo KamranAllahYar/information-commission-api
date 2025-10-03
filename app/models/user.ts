@@ -58,22 +58,14 @@ export default class User
     return parts.slice(1).join(' ') || ''
   }
 
-
   @column()
   declare gender: 'male' | 'female' | null
 
   @column()
   declare date_of_birth: DateTime | null
 
-
-  @column()
-  declare role: 'super_admin' | 'admin' | 'editor' | 'viewer'
-
   @column.dateTime()
   declare last_login_at: DateTime | null
-
-  @column()
-  declare is_admin: boolean
 
   @column()
   declare is_active: boolean
