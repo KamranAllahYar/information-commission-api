@@ -19,8 +19,8 @@ export default class extends BaseSchema {
       table.timestamp('published_at').nullable()
       table.boolean('featured').defaultTo(false).notNullable()
       table.integer('view').defaultTo(0).notNullable()
-      table.timestamp('created_at').notNullable()
-      table.timestamp('updated_at').notNullable()
+      table.timestamp('created_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 
