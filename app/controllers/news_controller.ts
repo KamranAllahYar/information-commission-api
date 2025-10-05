@@ -217,4 +217,37 @@ export default class NewsController {
       message: 'News deleted successfully',
     })
   }
+
+  async featured({ request }: HttpContext) {
+    const query = News.query().where('featured', true)
+    if (request.input('sort_column') && request.input('sort_order')) {
+      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    } else {
+      // Default sorting: newest first
+      query.orderBy('created_at', 'desc')
+    }
+    if (request.input('status')) {
+      query.where('status', request.input('status'))
+    }
+    if (request.input('category')) {
+      query.where('category', request.input('category'))
+    }
+    if (request.input('search')) {
+      const raw = String(request.input('search') || '').trim()
+      // Match formats: "NEWS-7", "news 7", or plain numeric "7"
+      const newsIdMatch = raw.match(/^news[-\s]?(\d+)$/i)
+      const numericOnlyMatch = raw.match(/^\d+$/)
+      if (newsIdMatch) {
+        const id = Number(newsIdMatch[1])
+        if (!Number.isNaN(id)) query.where('id', id)
+      } else if (numericOnlyMatch) {
+        const id = Number(raw)
+        if (!Number.isNaN(id)) query.where('id', id)
+      } else {
+        query.where('title', 'like', `%${raw}%`)
+      }
+    }
+
+    return await query.paginate(request.input('page', 1), request.input('page_size', 10))
+  }
 }

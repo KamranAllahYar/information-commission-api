@@ -7,6 +7,7 @@ router
   .group(() => {
     router.get('/public', [NewsController, 'public'])
     router.get('/public/:id', [NewsController, 'publicShow'])
+    router.get('/feature', [NewsController, 'featured'])
   })
   .prefix('api/news')
 
