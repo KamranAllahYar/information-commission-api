@@ -9,6 +9,9 @@ export const createNewsValidator = vine.compile(
     status: vine.enum(['published', 'draft']),
     image: vine.file().optional(),
     featured: vine.boolean(),
+    // Accept optional publish date inputs from dashboard
+    publishDate: vine.string().optional(),
+    published_at: vine.string().optional(),
   })
 )
 
@@ -23,5 +26,7 @@ export const updateNewsValidator = vine.compile(
     status: vine.enum(['published', 'draft']).optional(),
     image: vine.file().optional(),
     featured: vine.boolean().optional(),
+    publishDate: vine.string().optional(),
+    published_at: vine.string().optional(),
   })
 )

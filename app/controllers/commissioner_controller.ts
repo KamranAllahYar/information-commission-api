@@ -22,9 +22,14 @@ export default class CommissionerController {
       query.where('status', request.input('status'))
     }
     if (request.input('search')) {
-      query.where('full_name', 'like', `%${request.input('search')}%`)
-      query.orWhere('email', 'like', `%${request.input('search')}%`)
-      query.orWhere('title', 'like', `%${request.input('search')}%`)
+      const s = String(request.input('search')).trim()
+      query.where((qb) => {
+        qb.where('full_name', 'like', `%${s}%`)
+          .orWhere('email', 'like', `%${s}%`)
+          .orWhere('title', 'like', `%${s}%`)
+          .orWhere('phone', 'like', `%${s}%`)
+          .orWhere('sample_id', 'like', `%${s}%`)
+      })
     }
 
     const commissioners: any = await query.paginate(
