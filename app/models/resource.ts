@@ -47,7 +47,11 @@ export default class Resource extends BaseModel {
 
   @computed()
   get file_url() {
-    return getMediaUrl(this.file)
+    // Prefer explicit URL when provided (e.g., external video URL), otherwise build from stored file
+    if (this.url) {
+      return this.url
+    }
+    return this.file ? getMediaUrl(this.file) : ''
   }
 
   @column()
