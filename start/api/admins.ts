@@ -5,6 +5,7 @@ const AdminsController = () => import('#controllers/admins_controller')
 router
   .group(() => {
     router.get('/', [AdminsController, 'index'])
+    router.get('/stats', [AdminsController, 'stats'])
     router.post('/', [AdminsController, 'store'])
     router.get('/:id', [AdminsController, 'show'])
     router.put('/:id', [AdminsController, 'update'])

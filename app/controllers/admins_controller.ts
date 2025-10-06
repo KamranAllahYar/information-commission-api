@@ -2,9 +2,31 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import { DateTime } from 'luxon'
-import { createAdminValidator, updateAdminValidator } from '../validators/admin.js'
+import { createAdminValidator, updateAdminValidator } from '#validators/admin'
+import db from '@adonisjs/lucid/services/db'
 
 export default class AdminsController {
+  async stats() {
+    const [userResponse] = await db
+      .from('users')
+      .select(
+        db.raw('COUNT(*) as total_users'),
+        db.raw('SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as active_users', [1]),
+        db.raw('SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as inactive_users', [0])
+      )
+    const [result] = await db
+      .from('users as u')
+      .join('model_roles as mr', 'mr.model_id', 'u.id')
+      .join('roles as r', 'r.id', 'mr.role_id')
+      .where('r.slug', 'super-admin')
+      .countDistinct('u.id as total_super_admins')
+    const totalSuperAdmins = Number(result.total_super_admins)
+    return {
+      ...userResponse,
+      total_super_admins: totalSuperAdmins,
+    }
+  }
+
   async index({ request }: HttpContext) {
     const search = request.input('search')
 
@@ -20,6 +42,9 @@ export default class AdminsController {
         'last_login_at',
         'created_at',
       ])
+      .preload('user_roles', (q) => {
+        q.select('slug', 'title')
+      })
       .if(search, (q) => {
         q.where((searchQuery) => {
           searchQuery
