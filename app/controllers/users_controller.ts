@@ -15,8 +15,30 @@ import { HttpStatusMessages } from '#enums/http_status_messages'
 import env from '#start/env'
 import mail from '@adonisjs/mail/services/main'
 import { generateToken } from '#lib/helpers'
+import db from '@adonisjs/lucid/services/db'
 
 export default class UsersController {
+  async stats() {
+    const [userResponse] = await db
+      .from('users')
+      .select(
+        db.raw('COUNT(*) as total_users'),
+        db.raw('SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as active_users', [1]),
+        db.raw('SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as inactive_users', [0])
+      )
+    const [result] = await db
+      .from('users as u')
+      .join('model_roles as mr', 'mr.model_id', 'u.id')
+      .join('roles as r', 'r.id', 'mr.role_id')
+      .where('r.slug', 'super-admin')
+      .countDistinct('u.id as total_super_admins')
+    const totalSuperAdmins = Number(result.total_super_admins)
+    return {
+      ...userResponse,
+      total_super_admins: totalSuperAdmins,
+    }
+  }
+
   async index({ request }: HttpContext) {
     const search = request.input('search')
     if (search) {

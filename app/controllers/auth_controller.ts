@@ -87,11 +87,22 @@ export default class AuthController {
       })
     }
 
-    const token = await User.accessTokens.create(user)
-
+    // Load roles early to gate dashboard access by role assignment
     await user.load('user_roles', (q) => {
       q.select(['id', 'slug', 'title'])
     })
+
+    // Only allow dashboard login for users with at least one of the allowed roles
+    const allowedRoleSlugs = new Set(['super-admin', 'admin', 'editor', 'viewer'])
+    const userHasAllowedRole = user.user_roles?.some((role) => allowedRoleSlugs.has(role.slug))
+    if (!userHasAllowedRole) {
+      return response.forbidden({
+        message:
+          'Your account does not have the required role to access the admin dashboard. Please contact the system administrator.',
+      })
+    }
+
+    const token = await User.accessTokens.create(user)
 
     const permissions = await Acl.model(user).permissions()
     const otp = generateToken({ length: 6, numbersOnly: true })

@@ -14,10 +14,22 @@ router
   .group(() => {
     router.get('/', [NewsController, 'index'])
     router.get('/:id', [NewsController, 'show'])
+  })
+  .prefix('api/news')
+  .use(middleware.auth())
+  .use(middleware.acl({ roles: ['super-admin', 'admin', 'viewer', 'editor'] }))
+
+router
+  .group(() => {
     router.post('/', [NewsController, 'store'])
     router.put('/:id', [NewsController, 'update'])
-    router.delete('/:id', [NewsController, 'destroy'])
   })
+  .prefix('api/news')
+  .use(middleware.auth())
+  .use(middleware.acl({ roles: ['super-admin', 'admin'] }))
+
+router
+  .delete('/:id', [NewsController, 'destroy'])
   .prefix('api/news')
   .use(middleware.auth())
   .use(middleware.acl({ roles: ['super-admin'] }))

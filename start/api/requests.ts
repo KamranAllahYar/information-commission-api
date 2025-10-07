@@ -9,12 +9,18 @@ router.get('/:id', [RequestsController, 'show']).prefix('api/requests').use(midd
 
 router
   .group(() => {
-    router.get('/', [RequestsController, 'index']).use(middleware.acl({ roles: ['super-admin'] })) // get all
+    router
+      .get('/', [RequestsController, 'index'])
+      .use(middleware.acl({ roles: ['super-admin', 'admin', 'viewer', 'editor'] })) // get all
     router
       .get('/export/csv', [RequestsController, 'exportCsv'])
-      .use(middleware.acl({ roles: ['super-admin'] })) // export CSV
-    router.put('/:id', [RequestsController, 'update']) // update
-    router.delete('/:id', [RequestsController, 'destroy']) // delete
+      .use(middleware.acl({ roles: ['super-admin', 'admin', 'viewer', 'editor'] })) // export CSV
+    router
+      .put('/:id', [RequestsController, 'update'])
+      .use(middleware.acl({ roles: ['super-admin', 'admin'] })) // update
+    router
+      .delete('/:id', [RequestsController, 'destroy'])
+      .use(middleware.acl({ roles: ['super-admin'] })) // delete
   })
   .prefix('api/requests')
   .use(middleware.auth())

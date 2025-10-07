@@ -1,5 +1,5 @@
 import { HttpContext } from '@adonisjs/core/http'
-import { createNewsValidator } from '#validators/news'
+import { createNewsValidator, updateNewsValidator } from '#validators/news'
 import News from '#models/news'
 import { DateTime } from 'luxon'
 import MediaController from '#controllers/media_controller'
@@ -62,6 +62,24 @@ export default class NewsController {
   async public({ request }: HttpContext) {
     const query = News.query()
     query.where('status', 'published')
+
+    // Optional filters for public listing
+    const category = request.input('category') as string | undefined
+    const search = String(request.input('search') || '').trim()
+
+    if (category) {
+      query.where('category', category)
+    }
+
+    if (search) {
+      query.where((builder) => {
+        builder.where('title', 'like', `%${search}%`).orWhere('excerpt', 'like', `%${search}%`)
+      })
+    }
+
+    // Default sort by newest first
+    query.orderBy('created_at', 'desc')
+
     return await query.paginate(request.input('page', 1), request.input('page_size', 10))
   }
 
@@ -143,7 +161,7 @@ export default class NewsController {
   }
 
   async update({ request, response }: HttpContext) {
-    const payload = await request.validateUsing(createNewsValidator)
+    const payload = await request.validateUsing(updateNewsValidator)
     const { title, excerpt, content, category, status, featured } = payload
     const news = await News.query().where('uuid', request.param('id')).first()
     if (!news) {
@@ -167,31 +185,30 @@ export default class NewsController {
       imageUrl = await mediaController.saveMedia(image)
     }
 
-    if (status === 'draft') {
-      news.merge({
-        title,
-        excerpt,
-        content,
-        category,
-        image: image ? imageUrl!.path : null,
-        status,
-        featured,
-        published_at: null,
-      })
+    // Build update payload with only defined fields to avoid overwriting unintentionally
+    const updates: Record<string, unknown> = {}
+    if (typeof title !== 'undefined') updates.title = title
+    if (typeof excerpt !== 'undefined') updates.excerpt = excerpt
+    if (typeof content !== 'undefined') updates.content = content
+    if (typeof category !== 'undefined') updates.category = category
+    if (typeof featured !== 'undefined') updates.featured = featured
+    if (typeof status !== 'undefined') updates.status = status
+    // Only set image when a new file is provided; otherwise keep existing
+    if (image && imageUrl) {
+      updates.image = imageUrl.path
     }
-    if (status === 'published') {
-      const explicitPublishedAt = request.input('published_at') || request.input('publishDate')
-      news.merge({
-        title,
-        excerpt,
-        content,
-        image: image ? imageUrl!.path : null,
-        category,
-        status,
-        featured,
-        published_at: explicitPublishedAt ? DateTime.fromISO(explicitPublishedAt) : DateTime.now(),
-      })
+
+    // Handle published_at only when status is explicitly provided
+    if (typeof status !== 'undefined') {
+      if (status === 'draft') {
+        updates.published_at = null
+      } else if (status === 'published') {
+        const explicitPublishedAt = request.input('published_at') || request.input('publishDate')
+        updates.published_at = explicitPublishedAt ? DateTime.fromISO(explicitPublishedAt) : DateTime.now()
+      }
     }
+
+    news.merge(updates)
     await news.save()
     return response.ok({
       message: 'News updated successfully',
