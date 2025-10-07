@@ -89,11 +89,29 @@ export default class ResourcesController {
   async store({ request, response }: HttpContext) {
     const payload = await request.validateUsing(createResourceValidator)
     const { title, description, type, category, status, url } = payload
-    const file = request.file('file', {
-      size: '10mb',
-    })
+    const file = request.file('file', { size: '10mb' })
+
+    // If URL provided (for video URL case), allow creation without file
+    if (url && url.trim() && type === 'video_resources') {
+      const resource = await Resource.create({
+        title,
+        description,
+        category,
+        status,
+        type,
+        url,
+        file: '',
+        size: 0,
+        mime: '',
+      })
+      return response.ok({
+        message: 'Resource created successfully',
+        data: resource,
+      })
+    }
+
     if (!file) {
-      response.badRequest({ message: 'File is required' })
+      return response.badRequest({ message: 'File is required' })
     }
 
     const mediaController = new MediaController()
@@ -139,6 +157,11 @@ export default class ResourcesController {
         mime: media.mime,
       })
     }
+    // If url provided for video URL case, override existing file fields accordingly
+    if (type === 'video_resources' && url && url.trim()) {
+      resource.merge({ file: '', size: 0, mime: '', url })
+    }
+
     resource.merge({
       title,
       description,

@@ -7,7 +7,7 @@ export const createResourceValidator = vine.compile(
     category: vine.enum(['legislation', 'reports', 'guidelines', 'financial', 'policies']),
     status: vine.enum(['draft', 'published']),
     type: vine.enum(['laws_regulations', 'guides_manuals', 'video_resources']),
-    file: vine.file(),
+    file: vine.file().optional(),
     url: vine.string().optional(),
   })
 )

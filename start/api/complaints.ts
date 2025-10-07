@@ -9,7 +9,8 @@ router.get('/:id', [ComplaintsController, 'show']).prefix('api/complaints').use(
 router
   .delete('/:id', [ComplaintsController, 'destroy'])
   .prefix('api/complaints')
-  .use(middleware.auth()) // Delete complaint
+  .use(middleware.auth())
+  .use(middleware.acl({ roles: ['super-admin'] })) // Delete complaint
 router
   .group(() => {
     router.get('/', [ComplaintsController, 'index']) // Get all complaints (paginated)
@@ -17,4 +18,4 @@ router
   })
   .prefix('api/complaints')
   .use(middleware.auth())
-  .use(middleware.acl({ roles: ['super-admin'] }))
+  .use(middleware.acl({ roles: ['super-admin', 'admin', 'viewer', 'editor'] }))

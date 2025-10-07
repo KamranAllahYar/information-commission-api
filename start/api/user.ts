@@ -6,6 +6,7 @@ const UsersController = () => import('#controllers/users_controller')
 router
   .group(function () {
     router.get('/', [UsersController, 'index'])
+    router.get('/stats', [UsersController, 'stats'])
     // router.get('/existing-user', [UsersController, 'existingUsers'])
     router.put('/', [UsersController, 'selfProfileUpdate'])
     router.post('/image', [UsersController, 'image'])
