@@ -6,6 +6,18 @@ import MediaController from '#controllers/media_controller'
 import drive from '@adonisjs/drive/services/main'
 
 export default class NewsController {
+  async stats() {
+    const total = await News.query().count('* as total').first()
+    const published = await News.query().where('status', 'Published').count('* as total').first()
+    const draft = await News.query().where('status', 'Draft').count('* as total').first()
+
+    return {
+      total: total?.$extras.total || 0,
+      published: published?.$extras.total || 0,
+      draft: draft?.$extras.total || 0,
+      total_views: 2000,
+    }
+  }
   async index({ request }: HttpContext) {
     const query = News.query()
     if (request.input('sort_column') && request.input('sort_order')) {
@@ -52,7 +64,6 @@ export default class NewsController {
           total: total?.$extras.total || 0,
           published: published?.$extras.total || 0,
           draft: draft?.$extras.total || 0,
-          total_views: 2000,
         },
         data,
       },
@@ -66,9 +77,14 @@ export default class NewsController {
     // Optional filters for public listing
     const category = request.input('category') as string | undefined
     const search = String(request.input('search') || '').trim()
+    const featured = request.input('featured')
 
     if (category) {
       query.where('category', category)
+    }
+
+    if (featured !== undefined) {
+      query.where('featured', featured)
     }
 
     if (search) {

@@ -7,6 +7,7 @@ router
   .group(() => {
     router.get('/public', [NewsController, 'public'])
     router.get('/public/:id', [NewsController, 'publicShow'])
+    router.get('/stats', [NewsController, 'stats']).use(middleware.auth())
   })
   .prefix('api/news')
 

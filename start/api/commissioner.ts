@@ -7,6 +7,7 @@ router
   .group(() => {
     router.get('/', [CommissionersController, 'index'])
     router.get('/:id', [CommissionersController, 'show'])
+    router.get('/stats', [CommissionersController, 'stats'])
   })
   .prefix('api/commissioners')
 

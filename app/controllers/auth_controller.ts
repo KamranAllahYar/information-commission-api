@@ -128,7 +128,6 @@ export default class AuthController {
           .catch(console.error)
       }
     } catch (e) {
-      console.log(e)
     }
 
     return {
@@ -194,7 +193,6 @@ export default class AuthController {
           .catch(console.error)
       }
     } catch (e) {
-      console.log(e)
     }
     const token = await User.accessTokens.create(user)
     return { user, access_token: token.value!.release() }

@@ -11,7 +11,7 @@ router
     router.get('/:id', [ResourceController, 'show'])
   })
   .prefix('api/resources')
-
+router.get('/stats', [ResourceController, 'stats']).prefix('api/resources').use(middleware.auth()) // get stats
 router
   .group(() => {
     router.post('/', [ResourceController, 'store'])

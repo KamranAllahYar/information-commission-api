@@ -5,6 +5,19 @@ import { createRequestValidator, updateRequestValidator } from '#validators/requ
 import { DateTime } from 'luxon'
 
 export default class RequestsController {
+  async stats() {
+    const total = await Request.query().count('* as total').first()
+    const pending = await Request.query().where('status', 'pending').count('* as total').first()
+    const inreview = await Request.query().where('status', 'inreview').count('* as total').first()
+    const completed = await Request.query().where('status', 'completed').count('* as total').first()
+
+    return {
+      total: total?.$extras.total || 0,
+      pending: pending?.$extras.total || 0,
+      inreview: inreview?.$extras.total || 0,
+      completed: completed?.$extras.total || 0,
+    }
+  }
   async index({ request }: HttpContext) {
     const query = Request.query()
 
@@ -43,6 +56,7 @@ export default class RequestsController {
     const { meta, data } = requests.toJSON()
 
     // stats queries
+
     const total = await Request.query().count('* as total').first()
     const pending = await Request.query().where('status', 'pending').count('* as total').first()
     const inreview = await Request.query().where('status', 'inreview').count('* as total').first()

@@ -26,26 +26,76 @@ export default class UsersController {
         db.raw('SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as active_users', [1]),
         db.raw('SUM(CASE WHEN is_active = ? THEN 1 ELSE 0 END) as inactive_users', [0])
       )
-    const [result] = await db
+
+    // Count users without any role
+    const [usersWithoutRole] = await db
+      .from('users as u')
+      .leftJoin('model_roles as mr', 'mr.model_id', 'u.id')
+      .whereNull('mr.model_id')
+      .countDistinct('u.id as users_without_role')
+
+    // Count super admins
+    const [superAdminResult] = await db
       .from('users as u')
       .join('model_roles as mr', 'mr.model_id', 'u.id')
       .join('roles as r', 'r.id', 'mr.role_id')
       .where('r.slug', 'super-admin')
       .countDistinct('u.id as total_super_admins')
-    const totalSuperAdmins = Number(result.total_super_admins)
+
+    // Count admins
+    const [adminResult] = await db
+      .from('users as u')
+      .join('model_roles as mr', 'mr.model_id', 'u.id')
+      .join('roles as r', 'r.id', 'mr.role_id')
+      .where('r.slug', 'admin')
+      .countDistinct('u.id as total_admins')
+
+    // Count editors
+    const [editorResult] = await db
+      .from('users as u')
+      .join('model_roles as mr', 'mr.model_id', 'u.id')
+      .join('roles as r', 'r.id', 'mr.role_id')
+      .where('r.slug', 'editor')
+      .countDistinct('u.id as total_editors')
+
+    // Count viewers
+    const [viewerResult] = await db
+      .from('users as u')
+      .join('model_roles as mr', 'mr.model_id', 'u.id')
+      .join('roles as r', 'r.id', 'mr.role_id')
+      .where('r.slug', 'viewer')
+      .countDistinct('u.id as total_viewers')
+
     return {
       ...userResponse,
-      total_super_admins: totalSuperAdmins,
+      users_without_role: Number(usersWithoutRole.users_without_role),
+      total_super_admins: Number(superAdminResult.total_super_admins),
+      total_admins: Number(adminResult.total_admins),
+      total_editors: Number(editorResult.total_editors),
+      total_viewers: Number(viewerResult.total_viewers),
     }
   }
 
   async index({ request }: HttpContext) {
     const search = request.input('search')
-    if (search) {
-    }
+    const status = request.input('status')
+    const role = request.input('role')
+
     const query = User.query()
-      .select(['id', 'uuid', 'email', 'full_name', 'image_url', 'verified_at'])
-      .preload('user_roles')
+      .select([
+        'id',
+        'uuid',
+        'email',
+        'full_name',
+        'image_url',
+        'verified_at',
+        'is_active',
+        'last_login_at',
+        'created_at',
+      ])
+      .preload('user_roles', (q) => {
+        q.select('slug', 'title')
+      })
       .if(search, (q) => {
         q.where((searchQuery) => {
           searchQuery
@@ -56,30 +106,29 @@ export default class UsersController {
             })
         })
       })
-    const whereQuery = request.input('where')
-    if (whereQuery) {
-      try {
-        const whereConditions = JSON.parse(whereQuery)
-        if (whereConditions && typeof whereConditions === 'object') {
-          Object.entries(whereConditions).forEach(([key, value]) => {
-            if (
-              typeof value === 'string' ||
-              typeof value === 'number' ||
-              typeof value === 'boolean'
-            ) {
-              query.where(key, 'LIKE', `%${value}%`)
-            }
+      .if(status, (q) => {
+        if (status === 'active') {
+          q.where('is_active', true)
+        } else if (status === 'inactive') {
+          q.where('is_active', false)
+        }
+      })
+      .if(role, (q) => {
+        if (role === 'users') {
+          // Users without any role
+          q.whereDoesntHave('user_roles')
+        } else {
+          // Users with specific role
+          q.whereHas('user_roles', (roleQuery: any) => {
+            roleQuery.where('slug', role)
           })
         }
-      } catch (error) {
-        console.error('Error parsing whereQuery:', error)
-        throw new Error('Invalid where query format')
-      }
-    }
+      })
 
     if (request.input('sort_column') && request.input('sort_order')) {
       query.orderBy(request.input('sort_column'), request.input('sort_order'))
     }
+
     return query.paginate(request.input('page', 1), request.input('page_size', 10))
   }
 
@@ -112,6 +161,16 @@ export default class UsersController {
       otp,
       otp_expiry: DateTime.now().plus({ minute: 10 }),
     })
+
+    // Handle image upload
+    if (payload.image) {
+      const fileName = `user_${Date.now()}_${payload.image.clientName}`
+      await payload.image.move('storage/images/users', {
+        name: fileName,
+      })
+      user.image_url = `images/users/${fileName}`
+    }
+
     await user.save()
 
     if (role) {
@@ -136,7 +195,6 @@ export default class UsersController {
           .catch(console.error)
       }
     } catch (e) {
-      console.log(e)
     }
 
     return response.ok({
@@ -178,6 +236,16 @@ export default class UsersController {
     user.merge({
       ...payload.user,
     })
+
+    // Handle image upload
+    if (payload.image) {
+      const fileName = `user_${Date.now()}_${payload.image.clientName}`
+      await payload.image.move('storage/images/users', {
+        name: fileName,
+      })
+      user.image_url = `images/users/${fileName}`
+    }
+
     await user.save()
     await user.load('user_roles')
     if (role) {
