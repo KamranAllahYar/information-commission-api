@@ -6,7 +6,7 @@ const RequestsController = () => import('#controllers/requests_controller')
 router.post('/', [RequestsController, 'store']).prefix('api/requests') // create
 
 router.get('/:id', [RequestsController, 'show']).prefix('api/requests').use(middleware.auth()) // get by ID
-
+router.get('/stats', [RequestsController, 'stats']).prefix('api/requests').use(middleware.auth()) // get stats
 router
   .group(() => {
     router

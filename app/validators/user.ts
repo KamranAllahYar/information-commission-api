@@ -10,6 +10,7 @@ export const createUserValidator = vine.compile(
       gender: vine.enum(['Male', 'Female']).optional().nullable(),
     }),
     role_id: vine.number().positive().optional(),
+    image: vine.file().optional(),
   })
 )
 
@@ -24,6 +25,7 @@ export const updateUserValidator = vine.compile(
       })
       .optional(),
     role_id: vine.number().positive().optional(),
+    image: vine.file().optional(),
   })
 )
 

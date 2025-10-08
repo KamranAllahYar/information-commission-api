@@ -9,6 +9,22 @@ import Resource from '#models/resource'
 import drive from '@adonisjs/drive/services/main'
 
 export default class ResourcesController {
+  async stats() {
+    const total = await Resource.query().count('* as total').first()
+    const draft = await Resource.query().where('status', 'draft').count('* as total').first()
+    const published = await Resource.query()
+      .where('status', 'published')
+      .count('* as total')
+      .first()
+    const totalDownloads = await Resource.query().sum('download as total').first()
+
+    return {
+      total: total?.$extras.total || 0,
+      draft: draft?.$extras.total || 0,
+      published: published?.$extras.total || 0,
+      totalDownloads: totalDownloads?.$extras.total || 0,
+    }
+  }
   async index({ request }: HttpContext) {
     const query = Resource.query()
     if (request.input('sort_column') && request.input('sort_order')) {

@@ -4,6 +4,22 @@ import { createComplaintValidator, updateComplaintValidator } from '#validators/
 import { DateTime } from 'luxon'
 
 export default class ComplaintsController {
+  async stats() {
+    const total = await Complaint.query().count('* as total').first()
+    const open = await Complaint.query().where('status', 'Open').count('* as total').first()
+    const investigating = await Complaint.query()
+      .where('status', 'Investigating')
+      .count('* as total')
+      .first()
+    const resolved = await Complaint.query().where('status', 'Resolved').count('* as total').first()
+
+    return {
+      total: total?.$extras.total || 0,
+      open: open?.$extras.total || 0,
+      investigating: investigating?.$extras.total || 0,
+      resolved: resolved?.$extras.total || 0,
+    }
+  }
   async index({ request }: HttpContext) {
     const query = Complaint.query()
 

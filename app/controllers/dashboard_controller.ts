@@ -82,6 +82,7 @@ async function seriesByDay(table: string, start: DateTime, end: DateTime) {
 }
 
 export default class DashboardController {
+
   async index({ request }: HttpContext) {
     const periodParam = (request.input('period') as Period) || 'daily'
     const start = request.input('start') as string | undefined

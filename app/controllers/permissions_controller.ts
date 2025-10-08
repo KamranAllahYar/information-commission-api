@@ -31,7 +31,7 @@ export default class PermissionsController {
           })
         }
       } catch (error) {
-        console.error('Error parsing whereQuery:', error)
+        throw new Error('Invalid where query format')
         throw new Error('Invalid where query format')
       }
     }
@@ -177,7 +177,7 @@ export default class PermissionsController {
           })
         }
       } catch (error) {
-        console.error('Error parsing whereQuery:', error)
+        throw new Error('Invalid where query format')
         throw new Error('Invalid where query format')
       }
     }
@@ -376,7 +376,6 @@ export default class PermissionsController {
         message: 'Permission assigned to role successfully',
       }
     } catch (e) {
-      console.error(e)
     }
   }
   /**

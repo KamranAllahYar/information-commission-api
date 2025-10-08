@@ -29,6 +29,8 @@ export default class AdminsController {
 
   async index({ request }: HttpContext) {
     const search = request.input('search')
+    const status = request.input('status')
+    const role = request.input('role')
 
     const query = User.query()
       .select([
@@ -50,6 +52,21 @@ export default class AdminsController {
           searchQuery
             .where('email', 'LIKE', `%${search}%`)
             .orWhere('full_name', 'LIKE', `%${search}%`)
+            .orWhereHas('user_roles', (roleQuery: any) => {
+              roleQuery.where('title', 'LIKE', `%${search}%`)
+            })
+        })
+      })
+      .if(status, (q) => {
+        if (status === 'active') {
+          q.where('is_active', true)
+        } else if (status === 'inactive') {
+          q.where('is_active', false)
+        }
+      })
+      .if(role, (q) => {
+        q.whereHas('user_roles', (roleQuery: any) => {
+          roleQuery.where('slug', role)
         })
       })
 
