@@ -114,15 +114,9 @@ export default class UsersController {
         }
       })
       .if(role, (q) => {
-        if (role === 'users') {
-          // Users without any role
-          q.whereDoesntHave('user_roles')
-        } else {
-          // Users with specific role
-          q.whereHas('user_roles', (roleQuery: any) => {
-            roleQuery.where('slug', role)
-          })
-        }
+        q.whereHas('user_roles', (roleQuery: any) => {
+          roleQuery.where('slug', role)
+        })
       })
 
     if (request.input('sort_column') && request.input('sort_order')) {
@@ -194,8 +188,7 @@ export default class UsersController {
           .then(console.log)
           .catch(console.error)
       }
-    } catch (e) {
-    }
+    } catch (e) {}
 
     return response.ok({
       message: 'User created',
