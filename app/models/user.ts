@@ -110,4 +110,6 @@ export default class User
     },
   })
   declare user_roles: ManyToMany<typeof Role>
+
+
 }
