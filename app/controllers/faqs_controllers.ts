@@ -20,7 +20,9 @@ export default class FaqsControllers {
     if (request.input('search')) {
       const term = `%${request.input('search')}%`
       query.where((q) => {
-        q.where('question', 'like', term).orWhere('answer', 'like', term)
+        q.where('question', 'like', term)
+          .orWhere('answer', 'like', term)
+          .orWhere('sample_id', 'like', term)
       })
     }
     if (request.input('sort_column') && request.input('sort_order')) {

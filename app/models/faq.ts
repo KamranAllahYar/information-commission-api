@@ -9,7 +9,7 @@ export default class Faq extends BaseModel {
   @column()
   declare uuid: string
 
-  @column()
+  @column({ columnName: 'sample_id' })
   declare sampleID: string
 
   @beforeCreate()
