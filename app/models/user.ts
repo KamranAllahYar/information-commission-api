@@ -119,7 +119,8 @@ export default class User
   declare user_roles: ManyToMany<typeof Role>
 
   @beforeSave()
-  static async hashPassword(user: User) {
+  // static async hashPassword(user: User) {
+  static async hashPassword(this: any, user: any) {
     if (user.$dirty.password) {
       const plain = (user.password || '').trim()
 
