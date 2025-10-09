@@ -1,7 +1,14 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, beforeCreate, beforeSave, column, computed, manyToMany } from '@adonisjs/lucid/orm'
+import {
+  BaseModel,
+  beforeCreate,
+  beforeSave,
+  column,
+  computed,
+  manyToMany,
+} from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { getMediaUrl } from '#lib/helpers'
@@ -42,8 +49,6 @@ export default class User
 
   @column({ serializeAs: null })
   declare password: string
-
-
 
   @column()
   declare full_name: string
@@ -118,9 +123,9 @@ export default class User
     if (user.$dirty.password) {
       const plain = (user.password || '').trim()
 
-    if (!plain.startsWith('$scrypt')) {
-      user.password = await hash.make(plain)
-    }
+      if (!plain.startsWith('$scrypt')) {
+        user.password = await hash.make(plain)
+      }
     }
   }
 }
