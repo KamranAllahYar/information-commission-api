@@ -8,7 +8,7 @@ export const createRequestValidator = vine.compile(
     telephone_number: vine.string().optional(),
     email: vine.string().email(),
     type_of_applicant: vine.enum(['individual', 'organization']),
-    status: vine.enum(['pending', 'inreview', 'completed']).optional(),
+    status: vine.enum(['pending', 'inreview', 'in_review', 'completed']).optional(),
 
     description_of_information: vine.string(),
 
@@ -36,7 +36,7 @@ export const updateRequestValidator = vine.compile(
     address: vine.string().optional(),
     telephone_number: vine.string().optional(),
     email: vine.string().email().optional(),
-    status: vine.enum(['pending', 'inreview', 'completed']).optional(),
+    status: vine.enum(['pending', 'inreview', 'in_review', 'completed']).optional(),
     type_of_applicant: vine.enum(['individual', 'organization']).optional(),
 
     description_of_information: vine.string().optional(),

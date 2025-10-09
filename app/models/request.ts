@@ -41,7 +41,7 @@ export default class Request extends BaseModel {
   declare email: string
 
   @column()
-  declare status: 'pending' | 'inreview' | 'completed'
+  declare status: 'pending' | 'in_review' | 'completed'
 
   @column({ columnName: 'type_of_applicant' })
   declare typeOfApplicant: 'individual' | 'organization'

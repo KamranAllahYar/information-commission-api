@@ -20,6 +20,7 @@ export const updateUserValidator = vine.compile(
       .object({
         full_name: vine.string().optional(),
         email: vine.string().trim().optional(),
+        password: vine.string().minLength(8).optional(),
         date_of_birth: vine.string().optional(),
         gender: vine.enum(['Male', 'Female']).optional(),
       })

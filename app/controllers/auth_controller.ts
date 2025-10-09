@@ -10,10 +10,10 @@ import {
   verifyResetPasswordOtpValidator,
 } from '#validators/auth'
 import hash from '@adonisjs/core/services/hash'
-import { generateToken } from '#lib/helpers'
 import { DateTime } from 'luxon'
 import env from '#start/env'
 import mail from '@adonisjs/mail/services/main'
+import { generateToken } from '#lib/helpers'
 import { Acl } from '@holoyan/adonisjs-permissions'
 import MediaController from '#controllers/media_controller'
 
@@ -39,7 +39,14 @@ export default class AuthController {
 
   async login({ request, response }: HttpContext) {
     const payload = await request.validateUsing(loginValidator)
-    const user = await User.query().where('email', payload.user_id.toLowerCase()).first()
+    const loginId = (payload.user_id || '').toLowerCase()
+    const user = await User.query().whereRaw('LOWER(email) = ?', [loginId]).first()
+
+    // Debug: log login attempt (safe)
+    console.log('[AUTH] Login attempt', {
+      email: loginId,
+      found: !!user,
+    })
 
     if (!user) {
       return response.notFound({
@@ -50,6 +57,7 @@ export default class AuthController {
 
     // Check if admin is active
     if (!user.is_active) {
+      console.warn('[AUTH] Login blocked: user inactive', { email: loginId })
       return response.forbidden({
         message:
           'Your account has been deactivated. Please contact the system administrator for assistance.',
@@ -61,6 +69,7 @@ export default class AuthController {
     // ✅ First try with default (scrypt)
     try {
       isValid = await hash.verify(user.password, payload.password)
+      console.log('[AUTH] Scrypt verify result', { email: loginId, ok: isValid })
     } catch {
       isValid = false
     }
@@ -70,11 +79,13 @@ export default class AuthController {
       try {
         const bcryptDriver = hash.use('bcrypt')
         isValid = await bcryptDriver.verify(user.password, payload.password)
+        console.log('[AUTH] Bcrypt verify result', { email: loginId, ok: isValid })
 
         // 🔄 If bcrypt worked, upgrade hash to scrypt
         if (isValid) {
           user.password = payload.password
           await user.save()
+          console.log('[AUTH] Upgraded password hash to scrypt', { email: loginId })
         }
       } catch {
         isValid = false
@@ -82,6 +93,7 @@ export default class AuthController {
     }
 
     if (!isValid) {
+      console.warn('[AUTH] Login failed: incorrect password', { email: loginId })
       return response.unauthorized({
         message: 'The password is incorrect. Please check your credentials and try again.',
       })
@@ -96,6 +108,10 @@ export default class AuthController {
     const allowedRoleSlugs = new Set(['super-admin', 'admin', 'editor', 'viewer'])
     const userHasAllowedRole = user.user_roles?.some((role) => allowedRoleSlugs.has(role.slug))
     if (!userHasAllowedRole) {
+      console.warn('[AUTH] Login blocked: role not allowed', {
+        email: loginId,
+        roles: user.user_roles?.map((r) => r.slug),
+      })
       return response.forbidden({
         message:
           'Your account does not have the required role to access the admin dashboard. Please contact the system administrator.',
@@ -105,30 +121,7 @@ export default class AuthController {
     const token = await User.accessTokens.create(user)
 
     const permissions = await Acl.model(user).permissions()
-    const otp = generateToken({ length: 6, numbersOnly: true })
-
-    try {
-      if (env.get('NODE_ENV') === 'production' && !user.verified_at) {
-        user.otp = otp
-        user.otp_expiry = DateTime.now().plus({ minute: 10 })
-        user.save()
-        mail
-          .send((message) => {
-            message
-              .to(user.email)
-              .from(env.get('SMTP_FROM'))
-              .subject(`Otp to verify your ${env.get('APP_NAME')} account`)
-              .htmlView('emails/verify_email', {
-                otp,
-                url: `${env.get('WEB_URL')}/auth/sign-in`,
-                appName: env.get('APP_NAME'),
-              })
-          })
-          .then(console.log)
-          .catch(console.error)
-      }
-    } catch (e) {
-    }
+    // OTP send during login disabled temporarily
 
     return {
       user: {

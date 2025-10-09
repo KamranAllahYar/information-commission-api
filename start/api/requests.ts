@@ -17,7 +17,7 @@ router
       .use(middleware.acl({ roles: ['super-admin', 'admin', 'viewer', 'editor'] })) // export CSV
     router
       .put('/:id', [RequestsController, 'update'])
-      .use(middleware.acl({ roles: ['super-admin', 'admin'] })) // update
+      .use(middleware.acl({ roles: ['super-admin', 'admin', 'editor'] })) // update
     router
       .delete('/:id', [RequestsController, 'destroy'])
       .use(middleware.acl({ roles: ['super-admin'] })) // delete

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, beforeCreate, column, computed, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, beforeSave, column, computed, manyToMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import { getMediaUrl } from '#lib/helpers'
@@ -110,4 +110,12 @@ export default class User
     },
   })
   declare user_roles: ManyToMany<typeof Role>
+
+  @beforeSave()
+  static async hashPassword(user: User) {
+    if (user.$dirty.password) {
+      const plain = (user.password || '').trim()
+      user.password = await hash.make(plain)
+    }
+  }
 }

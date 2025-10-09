@@ -8,7 +8,7 @@ export default class RequestsController {
   async stats() {
     const total = await Request.query().count('* as total').first()
     const pending = await Request.query().where('status', 'pending').count('* as total').first()
-    const inreview = await Request.query().where('status', 'inreview').count('* as total').first()
+    const inreview = await Request.query().where('status', 'in_review').count('* as total').first()
     const completed = await Request.query().where('status', 'completed').count('* as total').first()
 
     return {
@@ -31,7 +31,9 @@ export default class RequestsController {
 
     // Filtering
     if (request.input('status')) {
-      query.where('status', request.input('status'))
+      const s = String(request.input('status') || '').toLowerCase().replace(/\s+/g, '')
+      const normalized = s === 'inreview' ? 'in_review' : s
+      query.where('status', normalized)
     }
     if (request.input('sample_id')) {
       query.where('sample_id', request.input('sample_id'))
@@ -59,7 +61,7 @@ export default class RequestsController {
 
     const total = await Request.query().count('* as total').first()
     const pending = await Request.query().where('status', 'pending').count('* as total').first()
-    const inreview = await Request.query().where('status', 'inreview').count('* as total').first()
+    const inreview = await Request.query().where('status', 'in_review').count('* as total').first()
     const completed = await Request.query().where('status', 'completed').count('* as total').first()
 
     return {
@@ -86,7 +88,7 @@ export default class RequestsController {
       address: data.address,
       telephoneNumber: data.telephone_number,
       email: data.email,
-      status: data.status as 'pending' | 'inreview' | 'completed',
+      status: (data.status === 'inreview' ? 'in_review' : data.status) as 'pending' | 'in_review' | 'completed',
       typeOfApplicant: data.type_of_applicant,
       description: data.description_of_information,
       mannerOfAccess: data.manner_of_access,
@@ -188,7 +190,7 @@ export default class RequestsController {
       ...(data.address !== undefined ? { address: data.address } : {}),
       ...(data.telephone_number ? { telephoneNumber: data.telephone_number } : {}),
       ...(data.email ? { email: data.email } : {}),
-      ...(data.status ? { status: data.status as 'pending' | 'inreview' | 'completed' } : {}),
+      ...(data.status ? { status: (data.status === 'inreview' ? 'in_review' : data.status) as 'pending' | 'in_review' | 'completed' } : {}),
       ...(data.type_of_applicant ? { typeOfApplicant: data.type_of_applicant } : {}),
       ...(data.description_of_information ? { description: data.description_of_information } : {}),
       ...(data.manner_of_access ? { mannerOfAccess: data.manner_of_access } : {}),
