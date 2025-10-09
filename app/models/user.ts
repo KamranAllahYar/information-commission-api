@@ -43,6 +43,8 @@ export default class User
   @column({ serializeAs: null })
   declare password: string
 
+
+
   @column()
   declare full_name: string
 
@@ -115,7 +117,10 @@ export default class User
   static async hashPassword(user: User) {
     if (user.$dirty.password) {
       const plain = (user.password || '').trim()
+
+    if (!plain.startsWith('$scrypt')) {
       user.password = await hash.make(plain)
+    }
     }
   }
 }

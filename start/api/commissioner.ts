@@ -6,8 +6,9 @@ const CommissionersController = () => import('#controllers/commissioner_controll
 router
   .group(() => {
     router.get('/', [CommissionersController, 'index'])
-    router.get('/:id', [CommissionersController, 'show'])
     router.get('/stats', [CommissionersController, 'stats'])
+
+    router.get('/:id', [CommissionersController, 'show'])
   })
   .prefix('api/commissioners')
 

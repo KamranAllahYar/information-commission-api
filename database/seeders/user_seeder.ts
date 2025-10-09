@@ -15,7 +15,7 @@ export default class UserSeeder extends BaseSeeder {
       password: 'admin##123',
       is_active: true,
     })
-
+    
     await adminUser.assignRole(superAdminRole.slug)
 
     await User.createMany(

@@ -7,11 +7,12 @@ router
   .group(() => {
     router.get('/', [ResourceController, 'index'])
     router.get('/public', [ResourceController, 'public'])
+    router.get('/stats', [ResourceController, 'stats']).use(middleware.auth()) // get stats
+
     router.get('/:id/download', [ResourceController, 'downloadFile'])
     router.get('/:id', [ResourceController, 'show'])
   })
   .prefix('api/resources')
-router.get('/stats', [ResourceController, 'stats']).prefix('api/resources').use(middleware.auth()) // get stats
 router
   .group(() => {
     router.post('/', [ResourceController, 'store'])

@@ -8,6 +8,7 @@ export const createUserValidator = vine.compile(
       password: vine.string().minLength(8),
       date_of_birth: vine.string().optional(),
       gender: vine.enum(['Male', 'Female']).optional().nullable(),
+      is_active: vine.boolean().optional(),
     }),
     role_id: vine.number().positive().optional(),
     image: vine.file().optional(),
@@ -23,9 +24,10 @@ export const updateUserValidator = vine.compile(
         password: vine.string().minLength(8).optional(),
         date_of_birth: vine.string().optional(),
         gender: vine.enum(['Male', 'Female']).optional(),
+        is_active: vine.boolean().optional(),
       })
       .optional(),
-    role_id: vine.number().positive().optional(),
+    role_id: vine.number().positive().optional().nullable(),
     image: vine.file().optional(),
   })
 )

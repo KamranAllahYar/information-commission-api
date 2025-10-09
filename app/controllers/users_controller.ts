@@ -147,14 +147,24 @@ export default class UsersController {
       }
     }
 
+    // Ensure password is hashed when creating user
+
     const otp = generateToken({ length: 6, numbersOnly: true })
 
     const user = new User()
     user.fill({
       ...payload.user,
+      // Normalize email casing on creation
+      email: payload.user.email?.toLowerCase(),
+      // Provide plain password; model hook will hash on save
       otp,
       otp_expiry: DateTime.now().plus({ minute: 10 }),
     })
+
+    // Default is_active to true if not provided
+    if (payload.user.is_active !== undefined) {
+      user.is_active = payload.user.is_active
+    }
 
     // Handle image upload
     if (payload.image) {
@@ -226,9 +236,18 @@ export default class UsersController {
         })
       }
     }
-    user.merge({
-      ...payload.user,
-    })
+    // Normalize and apply updatable fields
+    if (payload.user?.email !== undefined) {
+      user.email = String(payload.user.email).toLowerCase()
+    }
+    if (payload.user?.password) {
+      // Set plain; model hook will hash
+      user.password = payload.user.password
+    }
+
+    if (payload.user?.is_active !== undefined) {
+      user.is_active = payload.user.is_active
+    }
 
     // Handle image upload
     if (payload.image) {
@@ -241,11 +260,18 @@ export default class UsersController {
 
     await user.save()
     await user.load('user_roles')
+
     if (role) {
       if (user.user_roles[0]?.slug) {
         await user.revokeRole(user.user_roles[0].slug)
       }
       await user.assignRole(role.slug)
+    } else if (payload.role_id === null) {
+      if (user.user_roles && user.user_roles.length > 0) {
+        for (const userRole of user.user_roles) {
+          await user.revokeRole(userRole.slug)
+        }
+      }
     }
     return {
       message: 'User updated',
@@ -344,6 +370,7 @@ export default class UsersController {
         message: 'Incorrect password',
       })
     }
+    // Let model hook hash on save
     user.password = payload.password
     await user.save()
     return {

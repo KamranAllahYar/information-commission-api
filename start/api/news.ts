@@ -9,6 +9,7 @@ router
     router.get('/public/:id', [NewsController, 'publicShow'])
     router.get('/feature', [NewsController, 'featured'])
     router.get('/stats', [NewsController, 'stats']).use(middleware.auth())
+
   })
   .prefix('api/news')
 

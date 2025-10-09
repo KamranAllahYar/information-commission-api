@@ -57,24 +57,10 @@ export default class RequestsController {
 
     const { meta, data } = requests.toJSON()
 
-    // stats queries
-
-    const total = await Request.query().count('* as total').first()
-    const pending = await Request.query().where('status', 'pending').count('* as total').first()
-    const inreview = await Request.query().where('status', 'in_review').count('* as total').first()
-    const completed = await Request.query().where('status', 'completed').count('* as total').first()
-
+    // Return paginated data only; stats are served via the dedicated stats() endpoint
     return {
       meta,
-      data: {
-        stats: {
-          total: total?.$extras.total || 0,
-          pending: pending?.$extras.total || 0,
-          inreview: inreview?.$extras.total || 0,
-          completed: completed?.$extras.total || 0,
-        },
-        data,
-      },
+      data,
     }
   }
 

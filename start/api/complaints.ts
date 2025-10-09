@@ -4,11 +4,12 @@ import { middleware } from '#start/kernel'
 const ComplaintsController = () => import('#controllers/complaints_controller')
 
 router.post('/', [ComplaintsController, 'store']).prefix('api/complaints') // Create complaint
-router.get('/:id', [ComplaintsController, 'show']).prefix('api/complaints').use(middleware.auth()) // Get complaint by ID
 router
   .get('/stats', [ComplaintsController, 'stats'])
   .prefix('api/complaints')
   .use(middleware.auth()) // Get complaint stats
+router.get('/:id', [ComplaintsController, 'show']).prefix('api/complaints').use(middleware.auth()) // Get complaint by ID
+
 router
   .put('/:id', [ComplaintsController, 'update'])
   .prefix('api/complaints')
