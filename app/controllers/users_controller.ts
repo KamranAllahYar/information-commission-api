@@ -245,6 +245,10 @@ export default class UsersController {
       user.password = payload.user.password
     }
 
+    if (payload.user?.full_name !== undefined) {
+      user.full_name = payload.user.full_name
+    }
+
     if (payload.user?.is_active !== undefined) {
       user.is_active = payload.user.is_active
     }
