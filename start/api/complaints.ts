@@ -26,6 +26,7 @@ router
   .group(() => {
     router.get('/', [ComplaintsController, 'index']) // Get all complaints (paginated)
     router.get('/export/csv', [ComplaintsController, 'exportCsv']) // Export CSV
+    router.get('/:id/pdf', [ComplaintsController, 'downloadPdf']) // Download PDF
   })
   .prefix('api/complaints')
   .use(middleware.auth())

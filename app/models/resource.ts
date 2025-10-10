@@ -42,13 +42,13 @@ export default class Resource extends BaseModel {
   @column()
   declare file: string
 
-  @column()
+  @column({ serializeAs: null })
   declare url: string | null
 
   @computed()
   get file_url() {
-    // Prefer explicit URL when provided (e.g., external video URL), otherwise build from stored file
-    if (this.url) {
+    // Prefer returning an external URL when present; otherwise return the stored media URL.
+    if (this.url && this.url.trim() !== '') {
       return this.url
     }
     return this.file ? getMediaUrl(this.file) : ''

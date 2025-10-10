@@ -12,6 +12,9 @@ export default class ContactMessage extends BaseModel {
   declare email: string
 
   @column()
+  declare phoneNumber: string | null
+
+  @column()
   declare subject: string
 
   @column()

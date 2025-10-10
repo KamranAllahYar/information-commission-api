@@ -3,6 +3,8 @@ import Request from '#models/request'
 
 import { createRequestValidator, updateRequestValidator } from '#validators/request'
 import { DateTime } from 'luxon'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export default class RequestsController {
   async stats() {
@@ -308,5 +310,34 @@ export default class RequestsController {
     response.header('Content-Type', 'text/csv')
     response.header('Content-Disposition', `attachment; filename="${filename}"`)
     return response.send(csvContent)
+  }
+
+  // Download PDF for a request
+  async downloadPdf({ request, response }: HttpContext) {
+    const id = request.param('id')
+    const req = await Request.query()
+      .select(['id', 'uuid', 'sample_id', 'pdf_path'])
+      .where('uuid', id)
+      .first()
+
+    if (!req) {
+      return response.notFound({ message: 'Request not found' })
+    }
+
+    if (!req.pdfPath) {
+      return response.notFound({ message: 'PDF not generated for this request' })
+    }
+
+    try {
+      const fullPath = join(process.cwd(), req.pdfPath)
+      const pdfBuffer = await readFile(fullPath)
+
+      response.header('Content-Type', 'application/pdf')
+      response.header('Content-Disposition', `attachment; filename="request_${req.sampleID}.pdf"`)
+      return response.send(pdfBuffer)
+    } catch (error) {
+      console.error('Error reading PDF file:', error)
+      return response.internalServerError({ message: 'Error reading PDF file' })
+    }
   }
 }

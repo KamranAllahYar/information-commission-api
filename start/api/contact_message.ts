@@ -13,6 +13,7 @@ router
   .group(() => {
     router.get('/', [contactMessageController, 'index'])
     router.get('/:id', [contactMessageController, 'show'])
+    router.delete('/:id', [contactMessageController, 'destroy'])
   })
   .use(middleware.auth())
   .middleware(middleware.acl({ roles: ['super-admin'] }))

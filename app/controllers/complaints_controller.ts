@@ -2,6 +2,8 @@ import { HttpContext } from '@adonisjs/core/http'
 import Complaint from '#models/complaint'
 import { createComplaintValidator, updateComplaintValidator } from '#validators/complaint'
 import { DateTime } from 'luxon'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 export default class ComplaintsController {
   async stats() {
@@ -221,5 +223,34 @@ export default class ComplaintsController {
     response.header('Content-Type', 'text/csv')
     response.header('Content-Disposition', `attachment; filename="${filename}"`)
     return response.send(csvContent)
+  }
+
+  // Download PDF for a complaint
+  async downloadPdf({ request, response }: HttpContext) {
+    const id = request.param('id')
+    const complaint = await Complaint.query()
+      .select(['id', 'uuid', 'sample_id', 'pdf_path'])
+      .where('uuid', id)
+      .first()
+
+    if (!complaint) {
+      return response.notFound({ message: 'Complaint not found' })
+    }
+
+    if (!complaint.pdfPath) {
+      return response.notFound({ message: 'PDF not generated for this complaint' })
+    }
+
+    try {
+      const fullPath = join(process.cwd(), complaint.pdfPath)
+      const pdfBuffer = await readFile(fullPath)
+
+      response.header('Content-Type', 'application/pdf')
+      response.header('Content-Disposition', `attachment; filename="complaint_${complaint.sampleID}.pdf"`)
+      return response.send(pdfBuffer)
+    } catch (error) {
+      console.error('Error reading PDF file:', error)
+      return response.internalServerError({ message: 'Error reading PDF file' })
+    }
   }
 }

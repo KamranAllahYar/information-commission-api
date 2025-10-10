@@ -9,11 +9,23 @@ export default class ContactMessagesController {
   async index({ request }: HttpContext) {
     const search = request.input('search')
     const query = ContactMessage.query()
-    if (request.input('sort_column') && request.input('sort_order')) {
-      query.orderBy(request.input('sort_column'), request.input('sort_order'))
+    // Sort whitelisting to avoid invalid columns
+    const sortColumn = request.input('sort_column')
+    const sortOrder = request.input('sort_order')
+    const allowedSortColumns = ['id', 'name', 'email', 'phone_number', 'subject', 'created_at']
+    if (sortColumn && sortOrder && allowedSortColumns.includes(String(sortColumn))) {
+      query.orderBy(sortColumn, sortOrder)
     }
     if (search) {
-      query.where('name', 'like', `%${search}%`).orWhere('email', 'like', `%${search}%`)
+      const num = Number(search)
+      query
+        .where((q) => {
+          q.where('name', 'like', `%${search}%`)
+            .orWhere('email', 'like', `%${search}%`)
+        })
+      if (!Number.isNaN(num)) {
+        query.orWhere('id', num)
+      }
     }
     return await query.paginate(request.input('page', 1), request.input('page_size', 10))
   }
@@ -60,5 +72,14 @@ export default class ContactMessagesController {
       status_code: HttpStatusMessages.OK,
       message,
     })
+  }
+
+  async destroy({ request, response }: HttpContext) {
+    const message = await ContactMessage.find(request.param('id'))
+    if (!message) {
+      return response.notFound({ message: 'Contact message not found' })
+    }
+    await message.delete()
+    return response.ok({ message: 'Contact message deleted successfully' })
   }
 }

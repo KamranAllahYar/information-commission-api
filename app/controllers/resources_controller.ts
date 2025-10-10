@@ -201,14 +201,19 @@ export default class ResourcesController {
         message: 'Resource not found',
       })
     }
-    const exists = await drive.use().exists(resource.file)
-    if (exists) {
-      await drive.use().delete(resource.file)
-      await resource.delete()
-      return response.ok({
-        message: 'Resource deleted successfully',
-      })
+
+    // Only attempt to delete file if it exists and is not empty
+    if (resource.file && resource.file.trim() !== '') {
+      const exists = await drive.use().exists(resource.file)
+      if (exists) {
+        await drive.use().delete(resource.file)
+      }
     }
+
+    await resource.delete()
+    return response.ok({
+      message: 'Resource deleted successfully',
+    })
   }
 
   async updateStatus({ request, response }: HttpContext) {

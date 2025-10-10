@@ -8,6 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('name').nullable()
       table.string('email').notNullable()
+      table.string('phone_number').nullable()
       table.string('subject').nullable()
       table.text('message').notNullable()
       table.enum('status', ['Pending', 'Assigned', 'Resolved']).defaultTo('Pending')
