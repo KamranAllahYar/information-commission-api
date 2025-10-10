@@ -104,9 +104,9 @@ export default class Request extends BaseModel {
       const formData = {
         sampleID: model.sampleID,
         nameOfApplicant: model.nameOfApplicant,
-        dateOfBirth: model.dateOfBirth ? (typeof model.dateOfBirth === 'string' ? model.dateOfBirth : model.dateOfBirth.toISODate()) : undefined,
+        dateOfBirth: model.dateOfBirth?.toFormat('yyyy-MM-dd'),
         address: model.address,
-        telephoneNumber: model.telephoneNumber,
+        telephoneNumber: model.telephoneNumber || '',
         email: model.email,
         typeOfApplicant: model.typeOfApplicant,
         description: model.description,

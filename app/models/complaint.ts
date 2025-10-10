@@ -47,8 +47,6 @@ export default class Complaint extends BaseModel {
   // Contact Information
   @column()
   declare fullName: string
-
-
   @column()
   declare remedySought: string | null
 
@@ -95,15 +93,15 @@ export default class Complaint extends BaseModel {
       const formData = {
         sampleID: model.sampleID,
         type: model.type,
-        dateOfIncident: model.dateOfIncident ? (typeof model.dateOfIncident === 'string' ? model.dateOfIncident : model.dateOfIncident.toISODate()) : undefined,
+        dateOfIncident: model.dateOfIncident?.toFormat('yyyy-MM-dd'),
         description: model.description,
         fullName: model.fullName,
-        remedySought: model.remedySought,
+        remedySought: model.remedySought || '',
         email: model.email,
-        phone: model.phone,
-        address: model.address,
-        nationalId: model.nationalId,
-        passportNumber: model.passportNumber,
+        phone: model.phone || '',
+        address: model.address || '',
+        nationalId: model.nationalId || '',
+        passportNumber: model.passportNumber || '',
         priority: model.priority,
         status: model.status,
       }
